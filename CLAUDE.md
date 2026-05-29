@@ -73,8 +73,8 @@ metadata:
     "name": "Théophile Chin-nin",
     "url": "https://github.com/tchinnin"
   },
-  "homepage": "https://github.com/tchinnin/powerplatform-bestpractices",
-  "repository": "https://github.com/tchinnin/powerplatform-bestpractices",
+  "homepage": "https://github.com/tchinnin/powerplatform-bestpractices-skills",
+  "repository": "https://github.com/tchinnin/powerplatform-bestpractices-skills",
   "license": "MIT",
   "keywords": ["power-platform", "dataverse", "alm", "power-apps", "power-pages"]
 }
