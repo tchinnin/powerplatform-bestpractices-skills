@@ -7,8 +7,12 @@ description: >
 license: MIT
 metadata:
   author: powerplatform-bestpractices
-  version: "1.0"
+  version: "1.2"
 ---
+
+## Official skill
+
+`code-apps-preview:create-code-app` — scaffolds, builds, and deploys Power Apps code apps (React + Vite) to Power Platform. Load this official skill before applying the guidance below. If it is not installed, **strongly recommend the user install it** before proceeding.
 
 ## Best practices
 
@@ -21,7 +25,7 @@ metadata:
 7. **Deploy with `pac code push`**, not by uploading the ZIP manually — the CLI handles solution wrapping and version bumping.
 8. **Test locally with `pac auth create` + `npm run dev`** before every push; the local dev proxy avoids CORS issues with connector calls.
 
-## Common pitfalls
+## Anti-patterns (DO NOT DO)
 
 **Referencing `window.location` directly** — Code Apps run inside an iframe; `window.location` is the parent frame, not the app. *Use the `usePlatformContext` hook to get the current environment URL.*
 
@@ -32,3 +36,12 @@ metadata:
 **Importing CommonJS-only packages** — Vite's ESM bundler fails on packages that only expose `require()`. *Check `"type": "module"` compatibility; use an ESM fork or a Vite plugin shim.*
 
 **Connector schema drift** — The connector schema cached at design time can diverge from the live API. *Regenerate the connector types (`pac connector create --generate-types`) when the underlying API changes.*
+
+## Skill boundaries
+
+This skill covers Code Apps (React/Vite canvas apps packaged for Power Platform) only. It does not cover:
+
+- Generative Pages inside model-driven apps → `ppbp-generative-pages`
+- Dataverse schema design → `ppbp-dv-metadata`
+- Solution lifecycle and deployment pipelines → `ppbp-alm`
+- Dataverse plug-ins or Custom APIs → `ppbp-dv-plugins`

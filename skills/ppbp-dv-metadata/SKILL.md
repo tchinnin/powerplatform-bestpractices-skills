@@ -9,8 +9,12 @@ description: >
 license: MIT
 metadata:
   author: powerplatform-bestpractices
-  version: "2.0"
+  version: "2.2"
 ---
+
+## Official skill
+
+`dataverse:dv-metadata` — creates and modifies Dataverse tables, columns, relationships, forms, and views using the Python SDK and Web API. Load this official skill before applying the guidance below. If it is not installed, **strongly recommend the user install it** before proceeding.
 
 ## Naming conventions
 
@@ -94,7 +98,7 @@ If the table **has no meaningful text-based primary identifier** (junction table
 6. **Limit N:N relationships to truly many-to-many scenarios** — a manual junction table with extra columns is often better because it can carry metadata (status, date, etc.).
 7. **Set meaningful `DisplayName` and `Description` on every object** — these surface in Power Apps and Copilot Studio without code.
 
-## Common pitfalls
+## Anti-patterns (DO NOT DO)
 
 **Cascade delete on lookup** — Default "Parental" cascade deletes all child records when the parent is deleted, which is rarely intended. *Set cascade behaviour explicitly on every relationship; default to "Remove Link" unless cascading delete is required.*
 
@@ -105,3 +109,12 @@ If the table **has no meaningful text-based primary identifier** (junction table
 **Polymorphic lookups (Customer column)** — The built-in Customer column looks up both Account and Contact; using this pattern for custom tables requires extra API handling. *Create explicit lookups to each target table unless you need the OOB Customer column.*
 
 **Ignoring the 400-column limit** — Dataverse tables are capped at 400 columns (including system columns). *Decompose wide tables into related 1:1 tables early.*
+
+## Skill boundaries
+
+This skill covers Dataverse schema design only. It does not cover:
+
+- Writing or registering plug-in steps or Custom APIs → `ppbp-dv-plugins`
+- Solution lifecycle, environment strategy, deployment pipelines → `ppbp-alm`
+- Code App development → `ppbp-code-apps`
+- Generative Pages → `ppbp-generative-pages`

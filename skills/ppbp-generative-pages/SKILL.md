@@ -7,8 +7,12 @@ description: >
 license: MIT
 metadata:
   author: powerplatform-bestpractices
-  version: "1.0"
+  version: "1.2"
 ---
+
+## Official skill
+
+`model-apps:genpage` — creates, updates, and deploys Power Apps Generative Pages for model-driven apps using React v17, TypeScript, and Fluent UI v9. Load this official skill before applying the guidance below. If it is not installed, **strongly recommend the user install it** before proceeding.
 
 ## Best practices
 
@@ -20,7 +24,7 @@ metadata:
 6. **Deploy with `pac pages push`** after every change; the page is compiled and embedded in the solution automatically.
 7. **Use `FluentProvider` with `webLightTheme` at the root** only as a local dev fallback — in production the shell injects its own theme tokens.
 
-## Common pitfalls
+## Anti-patterns (DO NOT DO)
 
 **Calling `Xrm.Page` directly** — `Xrm.Page` is deprecated and unavailable in Generative Pages. *Use the SDK context object passed to the page entry point.*
 
@@ -31,3 +35,12 @@ metadata:
 **Forgetting `"type": "CustomPage"` in the sitemap** — Adding the page to the app without the correct sitemap entry type causes the page to render in a plain iframe without SDK access.
 
 **Bundle size creep** — Generative Pages have a tighter bundle budget than standalone apps. *Monitor with `pac pages analyze`; lazy-load heavy sub-sections with `React.lazy`.*
+
+## Skill boundaries
+
+This skill covers Generative Pages inside model-driven apps only. It does not cover:
+
+- Standalone React/Vite Code Apps (canvas) → `ppbp-code-apps`
+- Dataverse schema design → `ppbp-dv-metadata`
+- Solution lifecycle and deployment pipelines → `ppbp-alm`
+- PCF controls → `ppbp-code-apps`
