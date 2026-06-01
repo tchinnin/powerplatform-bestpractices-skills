@@ -68,6 +68,36 @@ Code blocks must be complete and executable — no comment-only stubs or placeho
 
 Large or detailed examples go in `references/`, linked from the body. Reference content must illustrate a pattern, not a specific project implementation.
 
+### Documenting common issues and implementation gotchas
+
+When a topic has a **specific implementation pitfall** — a non-obvious API behaviour, a common error that wastes time, a mandatory multi-step procedure that nothing in the official docs makes obvious — document it using this two-level pattern:
+
+**In SKILL.md (body) — minimal signal, 2–3 sentences max:**
+- Name the issue in a dedicated `## Common issue: <topic>` section.
+- One sentence explaining why it bites people.
+- One sentence pointing to the reference file where the full solution lives.
+
+Example:
+```markdown
+## Common issue: Global Choices and solutions
+
+Creating a Global Choice via the Web API does not add it to a solution automatically —
+a second `AddSolutionComponent` call (ComponentType 9) is required.
+
+If you are scripting Global Choices in a solution context, load
+[`references/global-choices-in-solutions.md`](references/global-choices-in-solutions.md)
+before writing any code.
+```
+
+**In `references/<topic>.md` — the full treatment:**
+- Root cause and explanation.
+- Step-by-step correct procedure with complete, runnable code snippets.
+- Table of wrong syntaxes / error codes and their correct alternatives.
+- Execution order or sequencing constraints when relevant.
+- A complete idempotent script example at the end.
+
+**Why this split:** the skill body is loaded into every relevant agent context — keeping it token-light prevents waste on sessions that never hit the issue. The reference is loaded on demand, only when the agent (or the user) is actually in that situation.
+
 ### Safety and quality controls
 
 For guidance on destructive or irreversible operations (e.g. solution deletion, column removal, environment reset), include a prominent warning block at the top of the relevant section. Skills covering CLI-heavy domains must include Wrong/Correct tables to reduce flag hallucination.

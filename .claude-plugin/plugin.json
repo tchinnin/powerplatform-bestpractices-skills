@@ -1,6 +1,6 @@
 {
   "name": "powerplatform-bestpractices",
-  "version": "1.2.0",
+  "version": "0.1.0",
   "description": "Power Platform best-practice skills: Dataverse modelling, ALM, security, Code Apps, Generative Pages, Dataverse Plugins, and Power Pages.",
   "author": {
     "name": "Théophile Chin-nin",

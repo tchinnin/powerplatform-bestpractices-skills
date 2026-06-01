@@ -9,7 +9,7 @@ description: >
 license: MIT
 metadata:
   author: powerplatform-bestpractices
-  version: "2.2"
+  version: "0.1.0"
 ---
 
 ## Official skill
@@ -97,6 +97,12 @@ If the table **has no meaningful text-based primary identifier** (junction table
 5. **Design for the security model first** — row ownership (User vs. Team) determines cascade behaviour and directly impacts role design.
 6. **Limit N:N relationships to truly many-to-many scenarios** — a manual junction table with extra columns is often better because it can carry metadata (status, date, etc.).
 7. **Set meaningful `DisplayName` and `Description` on every object** — these surface in Power Apps and Copilot Studio without code.
+
+## Common issue: Global Choices and solutions
+
+Creating a Global Choice via the Web API does **not** add it to a solution automatically — a second `AddSolutionComponent` call (ComponentType 9) is required. Binding a Picklist column to a global choice also requires a specific `odata.bind` syntax that differs from local option sets.
+
+If you are scripting Global Choices in a solution context, load [`references/global-choices-in-solutions.md`](references/global-choices-in-solutions.md) before writing any code.
 
 ## Anti-patterns (DO NOT DO)
 
