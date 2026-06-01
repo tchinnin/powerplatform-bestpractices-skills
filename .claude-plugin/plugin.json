@@ -1,0 +1,20 @@
+{
+  "name": "powerplatform-bestpractices",
+  "version": "0.1.0",
+  "description": "Power Platform best-practice skills: Dataverse modelling, ALM, security, Code Apps, Generative Pages, Dataverse Plugins, and Power Pages.",
+  "author": {
+    "name": "Théophile Chin-nin",
+    "url": "https://github.com/tchinnin"
+  },
+  "homepage": "https://github.com/tchinnin/powerplatform-bestpractices-skills",
+  "repository": "https://github.com/tchinnin/powerplatform-bestpractices-skills",
+  "license": "MIT",
+  "keywords": [
+    "power-platform",
+    "dataverse",
+    "alm",
+    "power-apps",
+    "power-pages",
+    "best-practices"
+  ]
+}
