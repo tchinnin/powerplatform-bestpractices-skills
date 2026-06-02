@@ -1,11 +1,11 @@
 ---
 name: ppbp-dv-metadata
 description: >
-  Use when the user is designing, reviewing, or modifying a Dataverse data model:
-  naming tables, columns, or relationships; choosing column types; defining option sets;
-  or reviewing schema objects for convention compliance.
-  Covers naming conventions (display vs. schema names, language rules, type-specific suffixes)
-  and schema design best practices (relationships, cascade, column limits, option sets).
+  Dataverse schema design and naming conventions. Use when the user is creating or
+  reviewing tables, columns, relationships, or global Choices — naming rules (display
+  vs. schema name, language, type suffixes), column type selection, cascade behaviour,
+  option sets, or convention compliance. Also use when the user asks about publisher
+  prefix, primary name column, AutoNumber, or the 400-column limit.
 license: MIT
 metadata:
   author: powerplatform-bestpractices
@@ -15,6 +15,20 @@ metadata:
 ## Official skill
 
 `dataverse:dv-metadata` — creates and modifies Dataverse tables, columns, relationships, forms, and views using the Python SDK and Web API. Load this official skill before applying the guidance below. If it is not installed, **strongly recommend the user install it** before proceeding.
+
+## Repository layout
+
+This skill owns the following paths in the canonical repository layout (see `ppbp-overview`):
+
+```
+<repo-root>/
+└── data/
+    ├── model/           # Dataverse data-model specifications — one .md file per table group
+    └── scripts/         # Python scripts that create tables, columns, and global choices
+```
+
+- **`data/model/`** — source of truth for the data model. Each file contains: domain heading, Mermaid ERD, table specs, open questions.
+- **`data/scripts/`** — Python scripts generated with `dataverse:dv-metadata`. Always maintain a model doc alongside every script.
 
 ## Naming conventions
 
@@ -70,11 +84,11 @@ metadata:
 - **Schema Name:** contains `_choice_` as a type segment. In a shared environment, include the project code:
 
   ```
-  {PublisherPrefix}_choice_{ChoiceName}           — single-project environment
-  {PublisherPrefix}_{ProjectCode}_{ChoiceName}    — shared environment
+  {PublisherPrefix}_choice_{ChoiceName}                    — single-project environment
+  {PublisherPrefix}_{ProjectCode}_choice_{ChoiceName}      — shared environment
   ```
 
-  Example — `Project Status Choice` → `prfx_choice_ProjectStatus` (or `prfx_code_ProjectStatus` in a shared environment).
+  Example — `Project Status Choice` → `prfx_choice_ProjectStatus` (or `prfx_code_choice_ProjectStatus` in a shared environment).
 
 - **Translations:** use native Dataverse translations to localise choice labels — never duplicate a global Choice to work around language differences.
 
@@ -106,15 +120,13 @@ If you are scripting Global Choices in a solution context, load [`references/glo
 
 ## Anti-patterns (DO NOT DO)
 
-**Cascade delete on lookup** — Default "Parental" cascade deletes all child records when the parent is deleted, which is rarely intended. *Set cascade behaviour explicitly on every relationship; default to "Remove Link" unless cascading delete is required.*
-
-**Overloading the primary name column** — `PrimaryName` is indexed and shown in lookups; treating it as a free-text description field causes poor lookup UX. *Keep it short and unique; use a separate Description column for long text.*
-
-**Wrong column type for numeric IDs** — Whole Number columns max out at Int32; use Decimal or String for identifiers that may exceed 2 billion or contain leading zeros.
-
-**Polymorphic lookups (Customer column)** — The built-in Customer column looks up both Account and Contact; using this pattern for custom tables requires extra API handling. *Create explicit lookups to each target table unless you need the OOB Customer column.*
-
-**Ignoring the 400-column limit** — Dataverse tables are capped at 400 columns (including system columns). *Decompose wide tables into related 1:1 tables early.*
+| Anti-pattern | Correct approach |
+|---|---|
+| Cascade delete on lookup — Default "Parental" cascade deletes all child records when the parent is deleted, which is rarely intended. | Set cascade behaviour explicitly on every relationship; default to "Remove Link" unless cascading delete is required. |
+| Overloading the primary name column — `PrimaryName` is indexed and shown in lookups; treating it as a free-text description field causes poor lookup UX. | Keep it short and unique; use a separate Description column for long text. |
+| Wrong column type for numeric IDs — Whole Number columns max out at Int32. | Use Decimal or String for identifiers that may exceed 2 billion or contain leading zeros. |
+| Polymorphic lookups (Customer column) — The built-in Customer column looks up both Account and Contact; using this pattern for custom tables requires extra API handling. | Create explicit lookups to each target table unless you need the OOB Customer column. |
+| Ignoring the 400-column limit — Dataverse tables are capped at 400 columns (including system columns). | Decompose wide tables into related 1:1 tables early. |
 
 ## Skill boundaries
 

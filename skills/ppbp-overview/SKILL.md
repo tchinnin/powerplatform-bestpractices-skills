@@ -1,11 +1,11 @@
 ---
 name: ppbp-overview
 description: >
-  Overview skill for Power Platform projects. Declared in CLAUDE.md or
-  .github/copilot-instructions.md so it loads automatically at the start of every
-  session in a Power Platform repository. Orients agents on repository layout and
-  skill routing. Use when the user asks how the project is organised, which skill
-  to use, or wants to create README.md or the agent instruction file.
+  Power Platform project orientation — canonical repository layout and skill routing.
+  Use when the user asks how the project is structured, which skill handles a task,
+  where a file belongs in the repo, or wants to set up CLAUDE.md /
+  .github/copilot-instructions.md for a new Power Platform project.
+  Load this skill whenever the active project is a Power Platform repository.
 license: MIT
 metadata:
   author: powerplatform-bestpractices
@@ -118,12 +118,15 @@ Project context: see [README.md](./README.md).
 
 ## Active skills
 
+<!-- List only the skills relevant to this project. Each ppbp-* skill requires its
+     paired official Microsoft skill to be installed — both must appear here. -->
+
 - `ppbp-overview` — project layout and skill routing
-- `ppbp-dv-metadata` — Dataverse schema conventions
-- `ppbp-alm` — solution lifecycle
-- `ppbp-code-apps` — Code App conventions
-- `ppbp-dv-plugins` — Plugin conventions
-- `ppbp-generative-pages` — Generative Page conventions
+- `dataverse:dv-solution` + `ppbp-alm` — solution lifecycle
+- `dataverse:dv-metadata` + `ppbp-dv-metadata` — Dataverse schema conventions
+- `code-apps-preview:create-code-app` + `ppbp-code-apps` — Code App conventions
+- `ppbp-dv-plugins` — Dataverse plug-ins and Custom APIs (no official skill)
+- `model-apps:genpage` + `ppbp-generative-pages` — Generative Page conventions
 
 ## Conventions
 
