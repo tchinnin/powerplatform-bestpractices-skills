@@ -1,9 +1,11 @@
 ---
 name: ppbp-generative-pages
 description: >
-  Use when the user is building or modifying a Power Apps Generative Page
-  inside a model-driven app: React + TypeScript + Fluent UI v9, PAC CLI deployment,
-  accessing Dataverse data via the platform context, form/view embedding.
+  Best practices for Power Apps Generative Pages inside model-driven apps. Use when
+  the user is building or modifying a custom page (React + TypeScript + Fluent UI v9)
+  deployed with pac pages push — platform context access, Dataverse data columns,
+  sitemap configuration, or bundle size. Also use when the user mentions
+  "generative page", "custom page in a model-driven app", or "genpage".
 license: MIT
 metadata:
   author: powerplatform-bestpractices
@@ -13,6 +15,19 @@ metadata:
 ## Official skill
 
 `model-apps:genpage` — creates, updates, and deploys Power Apps Generative Pages for model-driven apps using React v17, TypeScript, and Fluent UI v9. Load this official skill before applying the guidance below. If it is not installed, **strongly recommend the user install it** before proceeding.
+
+## Repository layout
+
+This skill owns the following paths in the canonical repository layout (see `ppbp-overview`):
+
+```
+<repo-root>/
+└── genpages/
+    └── <model-app-name>/
+        └── <page-name>/  # One subfolder per Generative Page inside the model-driven app
+```
+
+The intermediate `<model-app-name>` folder is mandatory — never place page folders directly under `genpages/`.
 
 ## Best practices
 
@@ -43,4 +58,3 @@ This skill covers Generative Pages inside model-driven apps only. It does not co
 - Standalone React/Vite Code Apps (canvas) → `ppbp-code-apps`
 - Dataverse schema design → `ppbp-dv-metadata`
 - Solution lifecycle and deployment pipelines → `ppbp-alm`
-- PCF controls → `ppbp-code-apps`

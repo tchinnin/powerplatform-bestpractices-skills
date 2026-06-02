@@ -1,0 +1,52 @@
+{
+  "name": "powerplatform-bestpractices",
+  "version": "0.1.0",
+  "description": "Power Platform best-practice skills: Dataverse modelling, ALM, security, Code Apps, Generative Pages, Dataverse Plugins, and Power Pages.",
+  "author": {
+    "name": "Théophile Chin-nin",
+    "url": "https://github.com/tchinnin"
+  },
+  "homepage": "https://github.com/tchinnin/powerplatform-bestpractices-skills",
+  "repository": "https://github.com/tchinnin/powerplatform-bestpractices-skills",
+  "license": "MIT",
+  "keywords": [
+    "power-platform",
+    "dataverse",
+    "alm",
+    "power-apps",
+    "power-pages",
+    "best-practices"
+  ],
+  "skills": [
+    {
+      "name": "ppbp-overview",
+      "path": "skills/ppbp-overview/SKILL.md",
+      "description": "Overview skill for Power Platform projects. Orients agents on repository layout and skill routing."
+    },
+    {
+      "name": "ppbp-alm",
+      "path": "skills/ppbp-alm/SKILL.md",
+      "description": "Application Lifecycle Management: solution design, environment strategy, deployment pipelines, solution segmentation."
+    },
+    {
+      "name": "ppbp-code-apps",
+      "path": "skills/ppbp-code-apps/SKILL.md",
+      "description": "Power Apps Code Apps (React/Vite): project setup, connector integration, PCF controls, deployment, authentication."
+    },
+    {
+      "name": "ppbp-dv-metadata",
+      "path": "skills/ppbp-dv-metadata/SKILL.md",
+      "description": "Dataverse data model design: naming conventions, column types, option sets, relationships, schema best practices."
+    },
+    {
+      "name": "ppbp-dv-plugins",
+      "path": "skills/ppbp-dv-plugins/SKILL.md",
+      "description": "Dataverse plug-ins and Custom APIs: IPlugin, pre/post-image, synchronous/asynchronous steps, PAC CLI registration."
+    },
+    {
+      "name": "ppbp-generative-pages",
+      "path": "skills/ppbp-generative-pages/SKILL.md",
+      "description": "Power Apps Generative Pages in model-driven apps: React + TypeScript + Fluent UI v9, PAC CLI deployment."
+    }
+  ]
+}
