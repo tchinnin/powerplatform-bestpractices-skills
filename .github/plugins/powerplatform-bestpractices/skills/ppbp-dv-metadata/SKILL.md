@@ -9,7 +9,7 @@ description: >
 license: MIT
 metadata:
   author: powerplatform-bestpractices
-  version: "0.1.0"
+  version: "0.2.0"
 ---
 
 ## Official skill
@@ -102,6 +102,22 @@ If the table **has no meaningful text-based primary identifier** (junction table
 
 ---
 
+## Table ownership
+
+**Default: always User Owned.** Every new table must use `UserOwned` ownership unless the user explicitly requests otherwise.
+
+- **User Owned** — rows are owned by a specific user or team; security roles apply at row level. This is the correct default for all business data.
+- **Organization Owned** — rows are owned by the entire org; no row-level security is possible. Use only when every user in the org must always see every row and row-level access control is permanently off the table.
+
+**Runtime guard — Organization Owned requires double confirmation.** If a script you are about to execute creates a table with `OrganizationOwned` ownership, you **must** stop and ask the user to confirm twice before running it:
+
+1. First confirmation: *"This script will create a table with Organization Owned ownership — all users will have full visibility of every row, with no row-level security. Is that intentional?"*
+2. Second confirmation: *"Confirmed: you want Organization Owned, not User Owned?"*
+
+Only proceed if the user explicitly confirms both times.
+
+> **Why:** changing a table's ownership type after data has been loaded requires recreating the table and migrating all records — it cannot be altered in place. Defaulting to the wrong ownership is a costly mistake.
+
 ## Schema design best practices
 
 1. **Prefix all custom tables and columns** with a publisher prefix (e.g. `prfx_`) to avoid collisions with future OOB fields.
@@ -122,6 +138,7 @@ If you are scripting Global Choices in a solution context, load [`references/glo
 
 | Anti-pattern | Correct approach |
 |---|---|
+| Organization Owned by default — removing row-level security is irreversible without a full table rebuild; it is almost never the right choice for business data. | Default to User Owned; only use Organization Owned when the user explicitly requests it, with double confirmation before executing. |
 | Cascade delete on lookup — Default "Parental" cascade deletes all child records when the parent is deleted, which is rarely intended. | Set cascade behaviour explicitly on every relationship; default to "Remove Link" unless cascading delete is required. |
 | Overloading the primary name column — `PrimaryName` is indexed and shown in lookups; treating it as a free-text description field causes poor lookup UX. | Keep it short and unique; use a separate Description column for long text. |
 | Wrong column type for numeric IDs — Whole Number columns max out at Int32. | Use Decimal or String for identifiers that may exceed 2 billion or contain leading zeros. |
