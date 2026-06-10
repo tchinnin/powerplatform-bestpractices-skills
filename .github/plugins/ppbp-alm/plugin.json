@@ -1,0 +1,11 @@
+{
+  "name": "ppbp-alm",
+  "version": "1.3.0",
+  "description": "Power Platform ALM best practices: solution design, naming, versioning, segmentation layers, dependency ordering, and deployment pipelines.",
+  "author": {
+    "name": "Théophile Chin-nin",
+    "url": "https://github.com/tchinnin"
+  },
+  "homepage": "https://github.com/tchinnin/powerplatform-bestpractices-skills",
+  "license": "MIT"
+}

@@ -1,0 +1,11 @@
+{
+  "name": "ppbp-codeapps",
+  "version": "1.3.0",
+  "description": "Power Apps Code Apps best practices: project scaffolding, dependency management, connector integration, type generation, bundle optimisation, and deployment.",
+  "author": {
+    "name": "Théophile Chin-nin",
+    "url": "https://github.com/tchinnin"
+  },
+  "homepage": "https://github.com/tchinnin/powerplatform-bestpractices-skills",
+  "license": "MIT"
+}

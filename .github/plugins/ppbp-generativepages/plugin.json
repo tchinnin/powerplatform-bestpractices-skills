@@ -1,0 +1,11 @@
+{
+  "name": "ppbp-generativepages",
+  "version": "1.2.0",
+  "description": "Power Apps Generative Pages best practices: repository organisation and team conventions on top of the official model-apps:genpage skill.",
+  "author": {
+    "name": "Théophile Chin-nin",
+    "url": "https://github.com/tchinnin"
+  },
+  "homepage": "https://github.com/tchinnin/powerplatform-bestpractices-skills",
+  "license": "MIT"
+}
