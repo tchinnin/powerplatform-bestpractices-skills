@@ -7,9 +7,45 @@
   },
   "plugins": [
     {
-      "name": "powerplatform-bestpractices",
-      "description": "Power Platform best-practice skills: Dataverse modelling, ALM, Code Apps, Generative Pages, Dataverse Plugins, and ALM pipelines.",
-      "source": "./.github/plugins/powerplatform-bestpractices",
+      "name": "ppbp-overview",
+      "description": "Power Platform project orientation: canonical repository layout, skill routing, README requirements, and agent instruction files.",
+      "source": "./.github/plugins/ppbp-overview",
+      "homepage": "https://github.com/tchinnin/powerplatform-bestpractices-skills"
+    },
+    {
+      "name": "ppbp-alm",
+      "description": "Power Platform ALM best practices: solution design, naming, versioning, segmentation, and deployment pipelines.",
+      "source": "./.github/plugins/ppbp-alm",
+      "homepage": "https://github.com/tchinnin/powerplatform-bestpractices-skills"
+    },
+    {
+      "name": "ppbp-codeapps",
+      "description": "Power Apps Code Apps best practices: scaffolding, connector integration, bundle optimisation, and deployment.",
+      "source": "./.github/plugins/ppbp-codeapps",
+      "homepage": "https://github.com/tchinnin/powerplatform-bestpractices-skills"
+    },
+    {
+      "name": "ppbp-dataverse-metadata",
+      "description": "Dataverse schema design best practices: table naming, column conventions, global Choices, and solution integration.",
+      "source": "./.github/plugins/ppbp-dataverse-metadata",
+      "homepage": "https://github.com/tchinnin/powerplatform-bestpractices-skills"
+    },
+    {
+      "name": "ppbp-dataverse-plugins",
+      "description": "Dataverse plug-in best practices: project setup, step plugins, Custom APIs, build and deployment workflow.",
+      "source": "./.github/plugins/ppbp-dataverse-plugins",
+      "homepage": "https://github.com/tchinnin/powerplatform-bestpractices-skills"
+    },
+    {
+      "name": "ppbp-generativepages",
+      "description": "Power Apps Generative Pages best practices: project setup, SDK usage, Fluent UI v9, data access, and deployment.",
+      "source": "./.github/plugins/ppbp-generativepages",
+      "homepage": "https://github.com/tchinnin/powerplatform-bestpractices-skills"
+    },
+    {
+      "name": "ppbp-dataverse-data",
+      "description": "Dataverse data manipulation best practices: script naming and lifecycle, idempotency, initial data import, bulk operations, dependency ordering, and environment segmentation.",
+      "source": "./.github/plugins/ppbp-dataverse-data",
       "homepage": "https://github.com/tchinnin/powerplatform-bestpractices-skills"
     }
   ]
