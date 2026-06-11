@@ -54,6 +54,7 @@ top of the official Code Apps procedure. It does not cover:
 - The scaffold/init/auth/deploy procedure itself → `code-apps-preview:create-code-app`
 - Domain orientation and repository layout → `ppbp-codeapps-overview`
 - Generated data-access code, bundle optimisation, data-fetching hygiene → `ppbp-codeapps-connectors`
+- Custom / company UX/UI guidelines, theming, design assets, HTML previews → `ppbp-codeapps-uxui`
 - Generative Pages inside model-driven apps → `ppbp-genpages-overview`
 - Dataverse schema design → `ppbp-dv-tables`, `ppbp-dv-columns`
 - Solution lifecycle → `ppbp-alm-solutions`

@@ -8,7 +8,7 @@ description: >
 license: MIT
 metadata:
   author: powerplatform-bestpractices
-  version: "1.1.0"
+  version: "1.2.0"
 ---
 
 ## Official skill
@@ -22,17 +22,25 @@ leaves open — it never restates its commands or constraints.
 ## Repository layout
 
 When a repo hosts more than one Code App, group them under a single parent folder,
-one independent project per app:
+one independent project per app. UX/UI design assets live in a sibling `uxui/`
+folder, kept separate from the app code:
 
 ```
 <repo-root>/
-└── codeapps/
-    └── <app-name>/          # one self-contained Code App (its own package.json)
-        └── …                # standard pac/Vite project — owned by the official skill
+├── codeapps/
+│   └── <app-name>/          # one self-contained Code App (its own package.json)
+│       └── …                # standard pac/Vite project — owned by the official skill
+└── uxui/                    # design system & previews (see ppbp-codeapps-uxui)
+    ├── guidelines.md        # colours, typography, spacing, layout rules
+    ├── assets/              # logo, icons, fonts shared across apps
+    └── <app-name>/          # HTML design previews for one app — name mirrors codeapps/<app-name>
+        └── <app-name>-screen.html
 ```
 
-- One subfolder per app, each with its own `package.json`, built and deployed
-  independently. Never mix multiple apps in one flat folder.
+- One subfolder per app under `codeapps/`, each with its own `package.json`, built
+  and deployed independently. Never mix multiple apps in one flat folder.
+- Each app's design previews live under `uxui/<app-name>/` with the **same folder
+  name** as its `codeapps/<app-name>` project, so design and code stay paired.
 
 ## Domain scope
 
@@ -40,12 +48,17 @@ one independent project per app:
 |---|---|
 | `ppbp-codeapps-setup` | Repo / dependency / config conventions on top of the official scaffold flow |
 | `ppbp-codeapps-connectors` | Generated data-access code, bundle-size optimisation, and data-fetching hygiene |
+| `ppbp-codeapps-uxui` | Applying custom / company UX/UI guidelines via design tokens / theming, design assets, HTML previews |
 
 ## Global Code App principles
 
 1. **One app, one folder** — each Code App is an independent project with its own
    `package.json`, versioned and deployed on its own.
-2. For everything else — scaffold command, React version, deploy command, auth —
+2. **Design freedom within the imposed stack.** Apps may follow any custom or
+   company UX/UI guideline and any UI library, but it must be expressed *through* the
+   React + Vite stack via a central design-token layer — not hard-coded across
+   components. Design assets and guidelines live under `uxui/`.
+3. For everything else — scaffold command, React version, deploy command, auth —
    follow `code-apps-preview:create-code-app`. Do not hard-code those here.
 
 ## Anti-patterns (DO NOT DO)
@@ -61,6 +74,7 @@ This skill covers Code App domain orientation and repository layout. It does not
 
 - Repo / dependency / config conventions for a single app → `ppbp-codeapps-setup`
 - Generated data-access code, bundle optimisation, data-fetching hygiene → `ppbp-codeapps-connectors`
+- Custom / company UX/UI guidelines, theming, design assets, HTML previews → `ppbp-codeapps-uxui`
 - The scaffold / init / auth / deploy procedure itself → `code-apps-preview:create-code-app`
 - Generative Pages inside model-driven apps → `ppbp-genpages-overview`
 - Project repository layout → `ppbp-overview`

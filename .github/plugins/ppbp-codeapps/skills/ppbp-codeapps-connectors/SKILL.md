@@ -54,6 +54,7 @@ data-fetching hygiene. It does not cover:
 
 - How to add a connector or generate its service / types → official `add-*` skills (`add-dataverse`, `add-connector`, …)
 - Code App repo / dependency / config conventions → `ppbp-codeapps-setup`
+- Custom / company UX/UI guidelines, design tokens / theming, design assets, HTML previews → `ppbp-codeapps-uxui`
 - Domain orientation and repository layout → `ppbp-codeapps-overview`
 - Generative Pages inside model-driven apps → `ppbp-genpages-overview`, `model-apps:genpage`
 - Dataverse schema design → `ppbp-dv-tables`, `ppbp-dv-columns`
