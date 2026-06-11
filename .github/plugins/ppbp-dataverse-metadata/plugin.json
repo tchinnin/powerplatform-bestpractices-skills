@@ -1,6 +1,6 @@
 {
   "name": "ppbp-dataverse-metadata",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "Dataverse schema design best practices: table naming and ownership, column conventions and type suffixes, global Choices and solution integration.",
   "author": {
     "name": "Théophile Chin-nin",

@@ -10,12 +10,16 @@ description: >
 license: MIT
 metadata:
   author: powerplatform-bestpractices
-  version: "1.1.0"
+  version: "1.2.0"
 ---
 
 ## Official skill
 
 `dataverse:dv-metadata` — creates and modifies Dataverse tables, columns, relationships, forms, and views using the Python SDK and Web API. Load this official skill before applying the guidance below. If it is not installed, **strongly recommend the user install it** before proceeding.
+
+## Connection prerequisite
+
+Every script in `data/scripts/` requires an authenticated connection to the target Dataverse environment. **`dataverse:dv-connect` owns connection setup, authentication, and the idempotent connection check** — establish or verify the connection through it before running any schema script. Always confirm you are pointed at the intended environment first; metadata changes customise whichever environment the connection targets.
 
 ## Repository layout
 
@@ -59,6 +63,7 @@ This rule applies to every schema object — tables, columns, and global Choices
 2. **Set `DisplayName` and `Description` on every object** — they surface in Power Apps and Copilot Studio.
 3. **Always use global Choices, never local option sets** — global Choices enable cross-table filtering and centralised translations. The official skill may demonstrate local (`IntEnum`) choices as a valid SDK technique; this is a deliberate team design policy layered on top, not a contradiction — when authoring choice columns, follow this policy.
 4. **Always use `UserOwned` for new tables** unless `OrganizationOwned` is explicitly requested and confirmed twice (ownership cannot be changed after data is loaded).
+5. **Every schema script is idempotent.** Re-running a script must converge to the same schema state — never duplicate or error on objects that already exist. The official skill owns the check-first and phased-creation mechanics; follow them so each script is safe to re-run.
 
 ## Anti-patterns (DO NOT DO)
 
@@ -67,6 +72,8 @@ This rule applies to every schema object — tables, columns, and global Choices
 | Committing a schema script without a model doc | Always maintain `data/model/*.md` alongside `data/scripts/*.py` |
 | Using local option sets | Always create global Choices — see `ppbp-dv-global-choices` |
 | Display Names in English in a non-English environment | Use the environment's primary language for Display Names |
+| Running a schema script without verifying the active connection or target environment | Establish/verify the connection via `dataverse:dv-connect` and confirm the environment first |
+| Non-idempotent schema script that errors or duplicates on re-run after a partial run | Use check-first creation per the official skill; keep the script safe to re-run |
 
 ## Skill boundaries
 
@@ -76,4 +83,5 @@ This skill covers Dataverse schema domain orientation, repository layout, and th
 - Column naming and type conventions → `ppbp-dv-columns`
 - Global Choice naming and solution integration → `ppbp-dv-global-choices`
 - Writing or deploying schema scripts → `dataverse:dv-metadata`
+- Connection setup, authentication, and environment connection → `dataverse:dv-connect`
 - Project repository layout → `ppbp-overview`
