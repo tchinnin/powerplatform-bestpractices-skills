@@ -34,17 +34,22 @@ chrome, navigation, and controls are Fluent UI v9, and the page must look native
 that host. So custom branding is applied by **theming Fluent v9**, never by bolting
 another library on top or hard-coding values:
 
-- **Generate a Fluent brand theme from `guidelines.md`.** Turn your brand colour into
-  a Fluent `BrandVariants` ramp and build light/dark themes from it. The written
-  guideline is the source; the theme is its machine translation.
 - **Consume Fluent design tokens, never literals.** Read colours, spacing, radii and
   type from Fluent's `tokens` (e.g. `tokens.colorBrandBackground`,
   `tokens.spacingHorizontalM`) inside `makeStyles`. A token automatically tracks the
-  active light/dark theme; a hard-coded hex does not.
+  active light/dark theme; a hard-coded hex does not. (The official skill owns the
+  `makeStyles` + `tokens` authoring rules — follow them.)
+- **Brand by overriding the theme tokens, not by adding a provider.** The host already
+  supplies the `FluentProvider` at the root — the official skill **forbids adding a
+  second one** (and forbids `createTheme` / `mergeThemes` / `useTheme`). To apply a
+  company brand, generate a `BrandVariants` ramp from `guidelines.md`, build
+  `createLightTheme` / `createDarkTheme` objects, and feed them through the genpage
+  theme-override mechanism the official skill documents (the `themeToVars` pattern) —
+  not a new provider.
 - **Do not introduce a second UI library** (Material, Mantine, Tailwind component
   kits, Bootstrap) to chase a look. It fragments the page from its host and bloats it.
 - **One source of truth.** `uxui/guidelines.md` is the human-readable spec; the Fluent
-  brand theme is its translation. When the guideline changes, change the theme, not
+  brand theme is its translation. When the guideline changes, change the ramp, not
   individual components.
 
 ## Consistency with the model-driven host (non-negotiable)
@@ -52,18 +57,22 @@ another library on top or hard-coding values:
 A generative page is a guest in the model-driven app. Branding must **harmonise** with
 that host, not fight it:
 
-- **Honour the host's light/dark mode** — provide both `createLightTheme` and
-  `createDarkTheme` from the same brand ramp so the page follows the user's theme.
+- **Honour the host's light/dark mode** — build both `createLightTheme` and
+  `createDarkTheme` from the same brand ramp so the page follows the user's theme,
+  applied via the official skill's `themeToVars` pattern rather than a provider swap.
 - **Keep Fluent's structure** — its control sizing, focus states, and spacing rhythm —
   so the page feels like part of the app, not an embedded micro-site. Tune the brand
   ramp and accent, not the fundamentals of how Fluent looks and behaves.
 - **Restrained accent.** Apply your brand mainly to primary actions and accents; let
   neutrals and surfaces stay close to Fluent defaults so the page blends with the host.
+  Prefer simply inheriting the host theme; introduce a custom ramp only when the
+  guideline genuinely demands a brand accent.
 
-Concrete `BrandVariants` ramp generation, light/dark theme building, and token
-consumption examples live in
-[`references/fluent-theming.md`](references/fluent-theming.md) — load it before
-writing any theming code.
+`BrandVariants` ramp generation and light/dark brand-theme building — and how they
+plug into the official `themeToVars` mechanism without a second provider — live in
+[`references/fluent-theming.md`](references/fluent-theming.md). Load it before
+writing any theming code, and load the official skill's `rules.md` for the
+`themeToVars` pattern itself (this skill never restates it).
 
 ## The shared `uxui/` layout
 
@@ -114,8 +123,10 @@ retrofit previews for existing pages.
 1. Write/refresh the shared `uxui/guidelines.md` (palette, type scale, spacing).
 2. Optionally generate a Fluent-native HTML preview under `uxui/genpages/<page-name>/`
    to agree on the look before coding.
-3. Translate `guidelines.md` into a Fluent **brand theme** — a `BrandVariants` ramp
-   plus light/dark themes — applied at the page root.
+3. If branding beyond the host theme is needed, translate `guidelines.md` into a
+   Fluent **brand theme** — a `BrandVariants` ramp plus `createLightTheme` /
+   `createDarkTheme` — and apply it via the official `themeToVars` pattern (no new
+   `FluentProvider`). Otherwise simply inherit the host theme.
 4. Build the page as Fluent UI v9 components consuming Fluent `tokens` — following the
    design intent of the preview (diverge in details, honour the core principles).
 
@@ -125,6 +136,7 @@ retrofit previews for existing pages.
 |---|---|
 | Adding a second UI library (Material, Mantine, Tailwind kit) to match a brand. | Theme Fluent UI v9 from a `BrandVariants` ramp; it is the only UI layer. |
 | Hard-coding hex colours / px sizes in `makeStyles` or JSX — drift from the guideline and breaks light/dark. | Read Fluent `tokens` (`tokens.colorBrandBackground`, `tokens.spacingHorizontalM`). |
+| Wrapping the page in a new `<FluentProvider theme={brand}>`, or using `createTheme` / `mergeThemes` / `useTheme`. | The host provides the root provider — the official skill forbids these. Apply the brand ramp via its `themeToVars` pattern. |
 | Building only a light theme, so the page clashes when the host is in dark mode. | Build light *and* dark themes from the same ramp; follow the host mode. |
 | Branding so heavily the page no longer looks like part of the model-driven app. | Apply brand to accents/primary actions; keep Fluent neutrals, sizing and structure. |
 | Restating genpage's Fluent APIs, theme-provider wiring, or page model here. | Point to `model-apps:genpage`; keep only branding conventions here. |

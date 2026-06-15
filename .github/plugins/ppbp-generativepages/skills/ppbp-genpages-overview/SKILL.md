@@ -3,13 +3,14 @@ name: ppbp-genpages-overview
 description: >
   Power Apps Generative Pages — team conventions and orientation. Use when starting a
   Generative Page task in a model-driven app to decide where page sources live in the
-  repo, how to name pages, and when to split one page into several. All authoring,
-  runtime APIs, dependencies, and deployment are owned by the official model-apps:genpage
-  skill — this skill routes to it and adds only repo and team conventions.
+  repo, how to name pages, when to split one page into several, and how to brand a page
+  via Fluent v9 theming. All authoring, runtime APIs, dependencies, and deployment are
+  owned by the official model-apps:genpage skill — this skill routes to it and adds only
+  repo, theming, and team conventions.
 license: MIT
 metadata:
   author: powerplatform-bestpractices
-  version: "1.1.0"
+  version: "1.2.0"
 ---
 
 ## Official skill
@@ -26,22 +27,35 @@ and team conventions below.
 ## Repository layout
 
 The official tool manages its own working directory. For version control, keep a
-curated copy of each page's source organised by the model-driven app it belongs to:
+curated copy of each page's source organised by the model-driven app it belongs to.
+UX/UI design assets live in the **shared** top-level `uxui/` folder (the same one Code
+Apps use), with page previews under a `genpages/` subfolder:
 
 ```
 <repo-root>/
-└── genpages/
-    └── <model-app-name>/      # group pages by the model-driven app that hosts them
-        └── <page-name>/       # one folder per page
+├── genpages/
+│   └── <model-app-name>/      # group pages by the model-driven app that hosts them
+│       └── <page-name>/       # one page, one folder
+└── uxui/                      # shared design system & previews (see ppbp-genpages-uxui)
+    ├── guidelines.md          # shared spec — colours, typography, spacing
+    ├── assets/                # shared logo, icons, fonts
+    └── genpages/              # generative-page previews
+        └── <page-name>/       # one folder per page — mirrors genpages/<…>/<page-name>
+            └── <page-name>.html
 ```
 
-- Group by model-driven app — never drop page folders loose under `genpages/`.
-- One page, one folder.
+- Group page sources by model-driven app — never drop page folders loose under `genpages/`.
+- One page, one folder — and one matching preview folder under `uxui/genpages/`.
+- `uxui/` is shared with Code Apps; one design system drives both.
 
 ## Domain scope
 
-This plugin is a single overview skill. Everything procedural — building, running,
-and deploying a page — is owned by `model-apps:genpage`; load it directly.
+| Skill | Covers (additive only) |
+|---|---|
+| `ppbp-genpages-uxui` | Branding a page via Fluent v9 theming, the shared design assets, and HTML previews |
+
+Everything procedural — building, running, and deploying a page — is owned by
+`model-apps:genpage`; load it directly.
 
 ## Team conventions (additive only)
 
@@ -52,6 +66,11 @@ and deploying a page — is owned by `model-apps:genpage`; load it directly.
    `.tsx`. Smaller pages are easier to review, deploy, and reason about.
 3. **Solution placement** — keep a model-driven app's pages in that app's solution;
    see `ppbp-alm-solutions` for solution structure.
+4. **Brand through Fluent v9, never around it.** Unlike a Code App (free UI library),
+   a generative page lives inside a model-driven host and must stay Fluent-native.
+   Apply any company brand by theming Fluent v9 (a `BrandVariants` ramp consumed via
+   `tokens`), never by adding another UI library or a second `FluentProvider`. Design
+   assets and the shared `guidelines.md` live under `uxui/` — see `ppbp-genpages-uxui`.
 
 ## Anti-patterns (DO NOT DO)
 
@@ -64,6 +83,7 @@ and deploying a page — is owned by `model-apps:genpage`; load it directly.
 
 This skill covers Generative Pages repo organisation and team conventions only. It does not cover:
 
+- Branding a page via Fluent v9 theming, design assets, and HTML previews → `ppbp-genpages-uxui`
 - All page authoring, runtime APIs, dependencies, and deployment → `model-apps:genpage`
 - Standalone Code Apps (canvas / React + Vite) → `ppbp-codeapps-overview`
 - Dataverse schema design → `ppbp-dv-tables`, `ppbp-dv-columns`
