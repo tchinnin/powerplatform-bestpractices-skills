@@ -7,6 +7,9 @@ description: >
   README.md as the single source of project truth. Also use when README.md is stale,
   incomplete, or missing required sections.
 license: MIT
+user-invocable: true
+model: sonnet
+allowed-tools: Read, Bash, Grep, Glob, WebSearch
 metadata:
   author: powerplatform-bestpractices
   version: "1.0.0"

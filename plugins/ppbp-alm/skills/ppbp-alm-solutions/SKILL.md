@@ -6,6 +6,9 @@ description: >
   naming or versioning, publisher prefix configuration, environment strategy
   (dev/test/prod), solution dependencies, or "what solution should I put X in".
 license: MIT
+user-invocable: true
+model: sonnet
+allowed-tools: Read, Bash, Grep, Glob, WebSearch
 metadata:
   author: powerplatform-bestpractices
   version: "1.2.0"

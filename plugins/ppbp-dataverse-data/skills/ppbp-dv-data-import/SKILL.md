@@ -7,6 +7,9 @@ description: >
   environment segmentation. The SDK calls, bulk/upsert mechanics, and batch sizing
   are owned by the official dataverse:dv-data skill.
 license: MIT
+user-invocable: true
+model: sonnet
+allowed-tools: Read, Bash, Grep, Glob, WebSearch
 metadata:
   author: powerplatform-bestpractices
   version: "1.1.0"

@@ -7,6 +7,9 @@ description: >
   scripts. Also use when the user asks about idempotency, script lifecycle,
   execution tracking, or companion documentation for data scripts.
 license: MIT
+user-invocable: true
+model: sonnet
+allowed-tools: Read, Bash, Grep, Glob, WebSearch
 metadata:
   author: powerplatform-bestpractices
   version: "1.0.0"

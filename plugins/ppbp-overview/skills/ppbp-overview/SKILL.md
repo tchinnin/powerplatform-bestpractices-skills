@@ -6,6 +6,9 @@ description: >
   or where a file belongs in the repo.
   Load this skill whenever the active project is a Power Platform repository.
 license: MIT
+user-invocable: true
+model: sonnet
+allowed-tools: Read, Bash, Grep, Glob, WebSearch
 metadata:
   author: powerplatform-bestpractices
   version: "2.2.0"

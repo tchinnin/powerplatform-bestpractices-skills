@@ -6,6 +6,9 @@ description: >
   repository layout for ALM assets and global conventions shared across all ALM
   skills in this plugin. Load before ppbp-alm-solutions or ppbp-alm-pipelines.
 license: MIT
+user-invocable: true
+model: sonnet
+allowed-tools: Read, Bash, Grep, Glob, WebSearch
 metadata:
   author: powerplatform-bestpractices
   version: "1.1.0"

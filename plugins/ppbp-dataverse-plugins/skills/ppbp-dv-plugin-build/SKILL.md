@@ -8,6 +8,9 @@ description: >
   the user asks about .snk files, NuGet metadata, or the Plugin Registration Tool
   for first-time deployment.
 license: MIT
+user-invocable: true
+model: sonnet
+allowed-tools: Read, Write, Edit, Bash, Grep, Glob, WebSearch
 metadata:
   author: powerplatform-bestpractices
   version: "1.2.0"

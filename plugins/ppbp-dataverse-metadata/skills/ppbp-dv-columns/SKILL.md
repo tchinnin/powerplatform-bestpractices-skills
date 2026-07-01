@@ -8,6 +8,9 @@ description: >
   column types. Also use when the user asks about column description conventions or
   publisher prefix on columns.
 license: MIT
+user-invocable: true
+model: sonnet
+allowed-tools: Read, Bash, Grep, Glob, WebSearch
 metadata:
   author: powerplatform-bestpractices
   version: "1.1.0"

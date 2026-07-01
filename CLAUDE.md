@@ -114,11 +114,21 @@ description: >
   One descriptive sentence plus an inline "Use when the user…" clause naming
   user-intent triggers. Cap at 1,024 characters.
 license: MIT
+user-invocable: true
+model: sonnet
+allowed-tools: Read, Bash, Grep, Glob, WebSearch
+argument-hint: "<hint>"   # optional — omit on overview/orientation skills
 metadata:
   author: powerplatform-bestpractices
   version: "1.0"
 ---
 ```
+
+Field guidance:
+- `user-invocable` — always `true` for `ppbp-*` skills (all are invocable as `/ppbp-*` slash commands).
+- `model` — use `sonnet` for all skills; `opus` only for skills requiring multi-document synthesis (none currently).
+- `allowed-tools` — base set is `Read, Bash, Grep, Glob, WebSearch`; add `Write, Edit` only for skills that generate project files (e.g. `ppbp-init`, `ppbp-dv-plugin-build`).
+- `argument-hint` — add only on skills where a meaningful argument can be passed (e.g. `ppbp-init: "<project-name>"`). Omit on overview/orientation skills.
 
 ### Token budgets
 

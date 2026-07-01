@@ -8,6 +8,9 @@ description: >
   owned by the official model-apps:genpage skill — this skill routes to it and adds only
   repo, theming, and team conventions.
 license: MIT
+user-invocable: true
+model: sonnet
+allowed-tools: Read, Bash, Grep, Glob, WebSearch
 metadata:
   author: powerplatform-bestpractices
   version: "1.2.0"

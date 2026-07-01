@@ -8,6 +8,9 @@ description: >
   Also use when the user asks about step registration, image attribute lists, or execution
   context access.
 license: MIT
+user-invocable: true
+model: sonnet
+allowed-tools: Read, Bash, Grep, Glob, WebSearch
 metadata:
   author: powerplatform-bestpractices
   version: "1.0.0"

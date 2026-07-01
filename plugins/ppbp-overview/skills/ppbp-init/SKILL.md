@@ -8,6 +8,10 @@ description: >
   user asks "how do I set up Claude Code for this project" or "what files do I need to
   create to start a Power Platform repo".
 license: MIT
+user-invocable: true
+model: sonnet
+allowed-tools: Read, Write, Edit, Bash, Grep, Glob, WebSearch
+argument-hint: "<project-name>"
 metadata:
   author: powerplatform-bestpractices
   version: "1.1.0"

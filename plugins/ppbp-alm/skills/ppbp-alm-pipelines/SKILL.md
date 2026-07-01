@@ -6,6 +6,9 @@ description: >
   pipelines for Power Platform, PAC CLI export/import sequences, pipeline YAML
   structure, or automated deployment to test/prod.
 license: MIT
+user-invocable: true
+model: sonnet
+allowed-tools: Read, Bash, Grep, Glob, WebSearch
 metadata:
   author: powerplatform-bestpractices
   version: "1.2.0"

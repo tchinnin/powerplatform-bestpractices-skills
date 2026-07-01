@@ -8,6 +8,9 @@ description: >
   skills in this plugin. Load before ppbp-dv-tables, ppbp-dv-columns, or
   ppbp-dv-global-choices.
 license: MIT
+user-invocable: true
+model: sonnet
+allowed-tools: Read, Bash, Grep, Glob, WebSearch
 metadata:
   author: powerplatform-bestpractices
   version: "1.2.0"

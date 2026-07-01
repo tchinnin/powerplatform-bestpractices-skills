@@ -6,6 +6,9 @@ description: >
   projects and global conventions shared across all plug-in skills in this plugin.
   Load before ppbp-dv-plugin-build, ppbp-dv-step-plugin, or ppbp-dv-custom-api.
 license: MIT
+user-invocable: true
+model: sonnet
+allowed-tools: Read, Bash, Grep, Glob, WebSearch
 metadata:
   author: powerplatform-bestpractices
   version: "1.1.0"

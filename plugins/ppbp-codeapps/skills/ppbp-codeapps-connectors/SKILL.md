@@ -7,6 +7,9 @@ description: >
   tree-shaking Fluent UI, or is structuring where and when data is fetched. The
   connector wiring and file generation itself is owned by the official add-* skills.
 license: MIT
+user-invocable: true
+model: sonnet
+allowed-tools: Read, Bash, Grep, Glob, WebSearch
 metadata:
   author: powerplatform-bestpractices
   version: "1.1.0"

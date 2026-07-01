@@ -8,6 +8,9 @@ description: >
   wide-table decomposition. Also use when the user asks about publisher prefix or
   table description conventions.
 license: MIT
+user-invocable: true
+model: sonnet
+allowed-tools: Read, Bash, Grep, Glob, WebSearch
 metadata:
   author: powerplatform-bestpractices
   version: "1.1.0"

@@ -55,30 +55,35 @@ Every domain plugin follows the same pattern:
 
 ```
 .
+├── marketplace.json       # Marketplace registry (platform-neutral, no vendor schema)
 ├── .claude-plugin/
-│   ├── marketplace.json   # Marketplace registry (lists all 6 domain plugins)
-│   └── plugin.json        # Monorepo-level descriptor
-├── .github/
-│   └── plugins/
-│       ├── ppbp-overview/
-│       │   ├── plugin.json
-│       │   └── skills/ppbp-overview/ ppbp-init/ ppbp-readme/
-│       ├── ppbp-alm/
-│       │   ├── plugin.json
-│       │   └── skills/ppbp-alm-overview/ ppbp-alm-solutions/ ppbp-alm-pipelines/
-│       ├── ppbp-codeapps/
-│       │   ├── plugin.json
-│       │   └── skills/ppbp-codeapps-overview/ ppbp-codeapps-setup/ ppbp-codeapps-connectors/
-│       ├── ppbp-dataverse-metadata/
-│       │   ├── plugin.json
-│       │   └── skills/ppbp-dv-metadata-overview/ ppbp-dv-tables/ ppbp-dv-columns/ ppbp-dv-global-choices/
-│       ├── ppbp-dataverse-plugins/
-│       │   ├── plugin.json
-│       │   └── skills/ppbp-dv-plugins-overview/ ppbp-dv-plugin-build/ ppbp-dv-step-plugin/ ppbp-dv-custom-api/
-│       └── ppbp-generativepages/
-│           ├── plugin.json
-│           └── skills/ppbp-genpages-overview/ ppbp-genpages-setup/ ppbp-genpages-development/
-└── CLAUDE.md              # Authoring standards for agents working in this repo
+│   └── plugin.json        # Monorepo-level descriptor (Claude Code)
+├── plugins/
+│   ├── ppbp-overview/
+│   │   ├── .plugin/plugin.json          # Current manifest
+│   │   ├── .claude-plugin/plugin.json   # Legacy backward-compat
+│   │   ├── AGENTS.md                    # Agent orchestration (platform-neutral)
+│   │   ├── CLAUDE.md -> AGENTS.md       # Symlink (Claude Code reads this)
+│   │   └── skills/ppbp-overview/ ppbp-init/ ppbp-readme/
+│   ├── ppbp-alm/
+│   │   ├── .plugin/  .claude-plugin/  AGENTS.md  CLAUDE.md ->
+│   │   └── skills/ppbp-alm-overview/ ppbp-alm-solutions/ ppbp-alm-pipelines/
+│   ├── ppbp-codeapps/
+│   │   ├── .plugin/  .claude-plugin/  AGENTS.md  CLAUDE.md ->
+│   │   └── skills/ppbp-codeapps-overview/ ppbp-codeapps-setup/ ppbp-codeapps-connectors/ ppbp-codeapps-uxui/
+│   ├── ppbp-dataverse-metadata/
+│   │   ├── .plugin/  .claude-plugin/  AGENTS.md  CLAUDE.md ->
+│   │   └── skills/ppbp-dv-metadata-overview/ ppbp-dv-tables/ ppbp-dv-columns/ ppbp-dv-global-choices/
+│   ├── ppbp-dataverse-data/
+│   │   ├── .plugin/  .claude-plugin/  AGENTS.md  CLAUDE.md ->
+│   │   └── skills/ppbp-dv-data-overview/ ppbp-dv-data-scripts/ ppbp-dv-data-import/
+│   ├── ppbp-dataverse-plugins/
+│   │   ├── .plugin/  .claude-plugin/  AGENTS.md  CLAUDE.md ->
+│   │   └── skills/ppbp-dv-plugins-overview/ ppbp-dv-plugin-build/ ppbp-dv-step-plugin/ ppbp-dv-custom-api/
+│   └── ppbp-generativepages/
+│       ├── .plugin/  .claude-plugin/  AGENTS.md  CLAUDE.md ->
+│       └── skills/ppbp-genpages-overview/ ppbp-genpages-uxui/
+└── CLAUDE.md              # Authoring standards for contributors
 ```
 
 ## Contributing

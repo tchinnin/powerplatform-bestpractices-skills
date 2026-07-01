@@ -6,6 +6,9 @@ description: >
   layout for Code Apps and the team conventions shared across all Code App skills
   in this plugin. Load before ppbp-codeapps-setup or ppbp-codeapps-connectors.
 license: MIT
+user-invocable: true
+model: sonnet
+allowed-tools: Read, Bash, Grep, Glob, WebSearch
 metadata:
   author: powerplatform-bestpractices
   version: "1.2.0"

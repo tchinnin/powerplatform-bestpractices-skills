@@ -8,6 +8,9 @@ description: >
   custom design within the React + Vite stack the official skill imposes, whatever
   UI library is chosen.
 license: MIT
+user-invocable: true
+model: sonnet
+allowed-tools: Read, Bash, Grep, Glob, WebSearch
 metadata:
   author: powerplatform-bestpractices
   version: "1.2.0"
