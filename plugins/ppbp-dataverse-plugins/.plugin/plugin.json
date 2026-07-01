@@ -1,0 +1,11 @@
+{
+  "name": "ppbp-dataverse-plugins",
+  "version": "1.3.0",
+  "description": "Dataverse plug-in best practices: project setup with PAC CLI, step plugin implementation, Custom API design, build workflow, and deployment.",
+  "author": {
+    "name": "Théophile Chin-nin",
+    "url": "https://github.com/tchinnin"
+  },
+  "homepage": "https://github.com/tchinnin/powerplatform-bestpractices-skills",
+  "license": "MIT"
+}

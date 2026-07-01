@@ -38,7 +38,10 @@ Skills are distributed as **domain plugins**, not as a flat list. The marketplac
 ```
 marketplace: powerplatform-bestpractices
 └── plugin: ppbp-<domain>/
-    ├── plugin.json
+    ├── .plugin/
+    │   └── plugin.json
+    ├── .claude-plugin/
+    │   └── plugin.json   ← legacy backward-compat copy
     └── skills/
         ├── ppbp-<domain>-overview/SKILL.md   ← required in every domain plugin
         └── ppbp-<domain>-<task>/SKILL.md     ← one per specific concern
@@ -75,7 +78,7 @@ When in doubt, add a skill to an existing plugin before creating a new plugin.
 
 ### plugin.json per domain
 
-Every plugin directory under `.github/plugins/<domain>/` must contain a `plugin.json`:
+Every plugin directory under `plugins/<domain>/` must contain a manifest at `.plugin/plugin.json`, plus a legacy copy at `.claude-plugin/plugin.json` with identical content (for Claude Code backward compatibility):
 
 ```json
 {
@@ -212,7 +215,7 @@ Before creating a new skill, verify no existing skill already covers the domain.
 This repo uses a two-level versioning structure:
 
 - **Skill level** — update `metadata.version` in the skill's frontmatter whenever the skill body changes.
-- **Plugin level** — each domain plugin has its own `plugin.json` under `.github/plugins/<domain>/`. Bump `version` in that file whenever a skill in the plugin changes (treat the plugin version as an aggregate of its skills).
+- **Plugin level** — each domain plugin has its own manifest at `plugins/<domain>/.plugin/plugin.json` (with a legacy copy at `plugins/<domain>/.claude-plugin/plugin.json`). Bump `version` in both files whenever a skill in the plugin changes (treat the plugin version as an aggregate of its skills).
 - **Marketplace level** — bump `version` in `.claude-plugin/plugin.json` when a plugin is added, removed, or renamed in the marketplace.
 
 **Semantic versioning rules:**

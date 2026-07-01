@@ -1,0 +1,11 @@
+{
+  "name": "ppbp-overview",
+  "version": "1.2.0",
+  "description": "Power Platform project orientation: canonical repository layout, skill routing, new project initialisation (ppbp-init), and README maintenance (ppbp-readme).",
+  "author": {
+    "name": "Théophile Chin-nin",
+    "url": "https://github.com/tchinnin"
+  },
+  "homepage": "https://github.com/tchinnin/powerplatform-bestpractices-skills",
+  "license": "MIT"
+}
