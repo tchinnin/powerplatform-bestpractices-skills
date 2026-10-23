@@ -1,0 +1,7 @@
+# yaml-language-server: $schema=../schemas/meta.schema.json
+version: "1.0"
+publisher:
+  prefix: prfx                 # permanent — 2-8 lowercase alphanumeric characters
+  project_code: crm            # optional — when set, tables and Choices are prfx_crm_…
+  solution: prfx_crm_Core      # unmanaged solution in the dev environment
+locale: en                     # base language of Display Names and Descriptions

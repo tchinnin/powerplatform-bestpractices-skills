@@ -13,7 +13,7 @@ model: sonnet
 allowed-tools: Read, Bash, Grep, Glob, WebSearch
 metadata:
   author: powerplatform-bestpractices
-  version: "1.1.0"
+  version: "1.2.0"
 ---
 
 ## Official skill
@@ -41,6 +41,12 @@ If the table **has no meaningful text-based primary identifier** (junction table
 → **Change the Primary Name Column type to AutoNumber.**
 
 **Why:** the primary name column is mandatory and displayed everywhere (lookups, views, search). An empty or non-significant text column degrades UX and breaks search. AutoNumber guarantees a unique, readable value and eliminates visual duplicates in lookups.
+
+An AutoNumber primary column is **optional** (`required_level: none`): the value is generated, so there is nothing for the user to fill in.
+
+## Table auditing
+
+**Default: auditing off.** Audit history consumes billed Dataverse storage and adds a small performance cost. Turn it on only when the user asks for it, typically for sensitive or regulated data such as finance, HR or consent. **Confirm twice** before turning it on, and warn about the storage impact. Keep table and column auditing aligned: auditing a table is pointless if its key columns aren't audited, and the reverse.
 
 ## Table ownership
 
@@ -75,6 +81,9 @@ Only proceed if the user explicitly confirms both times.
 | Leaving cascade behaviour implicit on a relationship — an unintended cascade delete can wipe child records when the parent is removed. | Set cascade behaviour explicitly on every relationship; default to "Remove Link" unless a cascading delete is genuinely required. |
 | Overloading the primary name column — `PrimaryName` is indexed and shown in lookups; treating it as a free-text description field causes poor lookup UX. | Keep it short and unique; use a separate Description column for long text. |
 | Building excessively wide tables — very wide tables hit Dataverse's per-row size limit and degrade query and form performance. | Decompose wide tables into related 1:1 tables early. |
+| Auditing enabled by default — storage cost with no requirement behind it. | Auditing off; enable only on explicit request, after double confirmation. |
+| A table for three fixed values — over-normalisation. | A global Choice. |
+| Copying a related table's data into columns — denormalisation that drifts. | A lookup to the related table. |
 
 ## Skill boundaries
 
@@ -85,3 +94,4 @@ This skill covers Dataverse table design only. It does not cover:
 - Global Choices → `ppbp-dv-global-choices`
 - Writing or registering plug-in steps or Custom APIs → `ppbp-dv-plugins-overview`
 - Solution lifecycle, environment strategy, deployment pipelines → `ppbp-alm-solutions`
+- Writing the model and applying it (plan → apply) → `ppbp-dv-metadata-as-code`

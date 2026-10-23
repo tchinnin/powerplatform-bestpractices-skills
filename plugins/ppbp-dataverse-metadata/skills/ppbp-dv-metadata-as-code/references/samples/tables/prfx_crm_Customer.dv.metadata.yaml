@@ -1,0 +1,78 @@
+# yaml-language-server: $schema=../../schemas/table.schema.json
+key: prfx_crm_Customer               # = file name; English, singular
+label: Customer
+label_plural: Customers
+description: Company the business sells to; anchors orders and commercial follow-up.
+ownership: user                      # user | org — irreversible
+table_type: standard
+auditing: false                      # never on by default (storage cost)
+
+columns:
+  prfx_Name:
+    label: Company Name
+    type: text
+    primary: true                    # exactly one primary column
+    required: true
+    max_length: 160
+    searchable: true
+
+  prfx_Website:
+    label: Website
+    type: url
+    max_length: 200
+
+  prfx_EmployeeCount:
+    label: Employee Count
+    type: integer
+    min: 0
+    max: 1000000
+
+  prfx_AnnualRevenue:
+    label: Annual Revenue
+    type: decimal                    # decimal by default — money only after double confirmation
+    min: 0
+    max: 100000000000
+    precision: 2
+
+  prfx_IsActive:
+    label: Active Customer
+    type: boolean                    # boolean → Is/Has prefix
+    default: true
+
+  prfx_SegmentCode:
+    label: Segment
+    type: choice                     # choice → Code suffix
+    choice: prfx_crm_choice_CustomerSegment
+    description: Drives service level and pricing rules.
+    required: true
+    default: 100000000
+
+  prfx_IndustryCode:
+    label: Industries
+    type: multichoice
+    choice: prfx_crm_choice_Industry
+    description: Used for market segmentation reporting.
+
+  prfx_Notes:
+    label: Notes
+    type: multiline
+    max_length: 4000
+
+  prfx_ContactEmail:
+    label: Contact Email
+    type: email
+    max_length: 100
+
+  prfx_FoundedOn:
+    label: Founded On
+    type: date
+
+  prfx_CustomerNumber:
+    label: Customer Number
+    type: autonumber
+    format: "CUS-{SEQNUM:6}"
+
+keys:
+  - schema_name: prfx_crm_customer_customernumber_key
+    columns: [prfx_customernumber]
+    label: Customer Number Key

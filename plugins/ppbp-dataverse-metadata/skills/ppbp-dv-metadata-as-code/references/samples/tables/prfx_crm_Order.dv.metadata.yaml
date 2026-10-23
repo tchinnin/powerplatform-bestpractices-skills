@@ -1,0 +1,52 @@
+# yaml-language-server: $schema=../../schemas/table.schema.json
+key: prfx_crm_Order
+label: Order
+label_plural: Orders
+description: Commercial order placed by a customer; tracks status and amount.
+ownership: user
+table_type: standard
+auditing: false
+
+columns:
+  prfx_OrderNumber:
+    label: Order Number
+    type: autonumber                 # no meaningful text identifier → AutoNumber primary
+    primary: true
+    format: "ORD-{SEQNUM:6}"
+
+  prfx_CustomerId:
+    label: Customer
+    type: lookup                     # lookup → Id suffix
+    target: prfx_crm_Customer
+    on_delete: restrict              # explicit cascade — never implicit
+    description: Customer who placed the order.
+    required: true
+
+  prfx_StatusCode:
+    label: Status
+    type: choice
+    choice: prfx_crm_choice_OrderStatus
+    description: Order lifecycle; drives fulfilment.
+    default: 100000000
+
+  prfx_Amount:
+    label: Amount
+    type: decimal
+    min: 0
+    max: 1000000000
+    precision: 2
+
+  prfx_OrderedOn:
+    label: Ordered On
+    type: datetime
+    behavior: userlocal
+
+  prfx_HasPriority:
+    label: Priority Order
+    type: boolean
+    default: false
+
+  prfx_Attachment:
+    label: Signed Order Form
+    type: file
+    max_size_kb: 10240

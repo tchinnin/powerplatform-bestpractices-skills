@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Dataverse _meta.dv.metadata.yaml",
+  "description": "Entry point of a Dataverse metadata-as-code model: publisher, optional project code, target solution and base language.",
+  "type": "object",
+  "required": ["version", "publisher", "locale"],
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "Format version of the model files.",
+      "enum": ["1.0"]
+    },
+    "publisher": {
+      "type": "object",
+      "required": ["prefix", "solution"],
+      "additionalProperties": false,
+      "properties": {
+        "prefix": {
+          "type": "string",
+          "description": "Publisher customization prefix — permanent, 2-8 lowercase alphanumeric characters.",
+          "pattern": "^[a-z][a-z0-9]{1,7}$"
+        },
+        "project_code": {
+          "type": "string",
+          "description": "Optional project code. When set, tables and global Choices must be named {prefix}_{project_code}_… (shared environments). Columns never carry it.",
+          "pattern": "^[a-z0-9]+$"
+        },
+        "solution": {
+          "type": "string",
+          "description": "Unique name of the target unmanaged solution in the dev environment.",
+          "pattern": "^[A-Za-z][A-Za-z0-9_]*$"
+        }
+      }
+    },
+    "locale": {
+      "type": "string",
+      "description": "Base language of Display Names and Descriptions (the environment's primary language).",
+      "enum": ["en", "fr", "es", "de", "it", "pt", "nl"]
+    }
+  }
+}

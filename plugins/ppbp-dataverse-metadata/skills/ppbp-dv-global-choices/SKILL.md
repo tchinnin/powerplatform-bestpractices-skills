@@ -13,7 +13,7 @@ model: sonnet
 allowed-tools: Read, Bash, Grep, Glob, WebSearch
 metadata:
   author: powerplatform-bestpractices
-  version: "1.1.0"
+  version: "1.2.0"
 ---
 
 ## Official skill
@@ -59,6 +59,7 @@ If you are scripting Global Choices in a solution context, load [`references/glo
 
 This skill covers global Choice naming and solution integration. It does not cover:
 
+- Domain orientation and repository layout → `ppbp-dv-metadata-overview`
 - Table naming and ownership → `ppbp-dv-tables`
 - Column naming and type selection → `ppbp-dv-columns`
-- Writing or deploying schema scripts → `dataverse:dv-metadata`
+- Writing the model and applying it (plan → apply) → `ppbp-dv-metadata-as-code`
