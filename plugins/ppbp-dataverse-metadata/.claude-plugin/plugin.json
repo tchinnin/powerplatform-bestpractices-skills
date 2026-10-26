@@ -1,0 +1,11 @@
+{
+  "name": "ppbp-dataverse-metadata",
+  "version": "3.0.0",
+  "description": "Dataverse schema design best practices: table, column and global Choice conventions, model review, and dev-only, confirm-first change principles — whatever tool applies the changes.",
+  "author": {
+    "name": "Théophile Chin-nin",
+    "url": "https://github.com/tchinnin"
+  },
+  "homepage": "https://github.com/tchinnin/powerplatform-bestpractices-skills",
+  "license": "MIT"
+}

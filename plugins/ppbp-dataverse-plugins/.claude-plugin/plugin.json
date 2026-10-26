@@ -1,0 +1,11 @@
+{
+  "name": "ppbp-dataverse-plugins",
+  "version": "3.0.0",
+  "description": "Dataverse plug-in best practices: project scaffolding and build, step and Custom API design, and dev-only, confirm-first registration principles — whatever tool registers them.",
+  "author": {
+    "name": "Théophile Chin-nin",
+    "url": "https://github.com/tchinnin"
+  },
+  "homepage": "https://github.com/tchinnin/powerplatform-bestpractices-skills",
+  "license": "MIT"
+}
