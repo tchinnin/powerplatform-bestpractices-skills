@@ -1,7 +1,7 @@
 {
   "name": "ppbp-dataverse-metadata",
-  "version": "2.0.1",
-  "description": "Dataverse schema as code: .dv.metadata.yaml model, Terraform-style plan/apply to the dev environment (never destructive), planner agent, validation hook, review skill, and table/column/global Choice conventions.",
+  "version": "3.0.0",
+  "description": "Dataverse schema design best practices: table, column and global Choice conventions, model review, and dev-only, confirm-first change principles — whatever tool applies the changes.",
   "author": {
     "name": "Théophile Chin-nin",
     "url": "https://github.com/tchinnin"

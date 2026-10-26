@@ -12,7 +12,7 @@ model: sonnet
 allowed-tools: Read, Bash, Grep, Glob, WebSearch
 metadata:
   author: powerplatform-bestpractices
-  version: "1.0.0"
+  version: "1.0.2"
 ---
 
 ## Official skill
@@ -67,11 +67,11 @@ Maintain `data/import/RUNLOG.md` to record which scripts have been executed in w
 ```markdown
 | Script | Environment | Date | Run by | Notes |
 |---|---|---|---|---|
-| prereq/prereq-status-choices.py | DEV | 2026-06-10 | theophile | First setup |
-| prod/import-customers.py | PROD | 2026-06-10 | theophile | Initial load |
+| prereq/prereq-status-choices.py | dev | 2026-06-10 | theophile | First setup |
+| prod/import-customers.py | prod | 2026-06-10 | theophile | Initial load |
 ```
 
-This file is committed to the repo. It is the authoritative record of environment state for data scripts.
+This file is committed to the repo. It is the authoritative record of environment state for data scripts. The **Environment** column uses the stage names of the `.env.<stage>` descriptors (`dev`, `uat`, `prod`).
 
 ## Temp script lifecycle
 
@@ -101,5 +101,5 @@ This skill covers script naming conventions, lifecycle, idempotency, and executi
 
 - Domain orientation and repository layout → `ppbp-dv-data-overview`
 - Import logic, bulk operations, and dependency ordering → `ppbp-dv-data-import`
-- Dataverse table and column schema → `ppbp-dv-tables`, `ppbp-dv-columns`
+- Dataverse schema design and naming → `ppbp-dv-metadata-overview`
 - Solution lifecycle and deployment → `ppbp-alm-solutions`

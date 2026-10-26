@@ -2,7 +2,7 @@
 name: ppbp-alm-overview
 description: >
   Power Platform ALM domain overview. Use when starting any ALM-related task —
-  solution design, deployment, or environment strategy. Provides the canonical
+  solution design, deployment, or environment strategy (dev / UAT / prod). Provides the canonical
   repository layout for ALM assets and global conventions shared across all ALM
   skills in this plugin. Load before ppbp-alm-solutions or ppbp-alm-pipelines.
 license: MIT
@@ -11,7 +11,7 @@ model: sonnet
 allowed-tools: Read, Bash, Grep, Glob, WebSearch
 metadata:
   author: powerplatform-bestpractices
-  version: "1.1.0"
+  version: "1.2.0"
 ---
 
 ## Official skill
@@ -45,7 +45,7 @@ This plugin covers the full Power Platform ALM lifecycle:
 
 ## Global ALM principles
 
-1. **Environments are promotion stages, not workspaces** — only Dev is used for active development; Test and Prod receive managed imports via pipeline, never manual changes.
+1. **Environments are promotion stages, not workspaces** — the stages are `dev`, `uat` and `prod`, each described by its root `.env.<stage>` descriptor (created by `ppbp-init`). Only dev is used for active development; UAT and prod receive managed imports via pipeline, never manual changes.
 2. **Solutions encode the dependency graph** — the import order at deploy time must match the declared dependency graph in `README.md`.
 3. **Versioning is the contract** — solution version numbers communicate breaking vs. additive changes; treat them as a public API.
 
@@ -53,7 +53,8 @@ This plugin covers the full Power Platform ALM lifecycle:
 
 | Anti-pattern | Correct approach |
 |---|---|
-| Manual imports to Test or Prod | All non-dev deployments go through the pipeline |
+| Manual imports to UAT or prod | All non-dev deployments go through the pipeline |
+| Naming stages differently across pipelines, docs and descriptors (`test`, `qa`, `staging`…) | Use the stage names of the `.env.<stage>` descriptors: `dev`, `uat`, `prod` |
 | Storing unpacked solution XML at repo root | Use `solutions/<unique-name>/` if you export to source control |
 
 ## Skill boundaries

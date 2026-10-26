@@ -4,14 +4,14 @@ description: >
   Power Platform solution design best practices. Use when the user asks about solution
   structure (managed vs. unmanaged, how to split solutions, stability layers), solution
   naming or versioning, publisher prefix configuration, environment strategy
-  (dev/test/prod), solution dependencies, or "what solution should I put X in".
+  (dev/uat/prod), solution dependencies, or "what solution should I put X in".
 license: MIT
 user-invocable: true
 model: sonnet
 allowed-tools: Read, Bash, Grep, Glob, WebSearch
 metadata:
   author: powerplatform-bestpractices
-  version: "1.2.0"
+  version: "1.2.1"
 ---
 
 ## Official skill
@@ -63,7 +63,7 @@ Rules:
 
 ## Dependency ordering
 
-Document the dependency chain in the project `README.md` (see `ppbp-overview`). The import order at deploy time must exactly match the declared dependency graph — enforce this in your pipeline.
+Document the dependency chain in the project `README.md` (section spec in `ppbp-readme`). The import order at deploy time must exactly match the declared dependency graph — enforce this in your pipeline.
 
 ## Anti-patterns (DO NOT DO)
 

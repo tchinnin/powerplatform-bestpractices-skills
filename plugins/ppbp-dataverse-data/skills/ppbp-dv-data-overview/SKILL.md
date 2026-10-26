@@ -12,7 +12,7 @@ model: sonnet
 allowed-tools: Read, Bash, Grep, Glob, WebSearch
 metadata:
   author: powerplatform-bestpractices
-  version: "1.1.0"
+  version: "1.2.1"
 ---
 
 ## Official skill
@@ -21,20 +21,28 @@ metadata:
 
 ## Connection prerequisite
 
-Every script in `data/import/` requires an authenticated connection to the target Dataverse environment. **`dataverse:dv-connect` owns connection setup, authentication, and the idempotent connection check** — establish or verify the connection through it before running any data script. Always confirm you are pointed at the intended environment first, especially before running anything under `prod/`.
+Every script in `data/import/` requires an authenticated connection to the target Dataverse environment. **`dataverse:dv-connect` owns connection setup, authentication, and the idempotent connection check** — establish or verify the connection through it before running any data script.
+
+- **The target comes from the root `.env.<stage>` descriptor** (`.env.dev`, `.env.uat`, `.env.prod`, created by `ppbp-init`). Scripts take the stage as input and read the URL from that file — never hard-code a URL.
+- Always confirm the target stage and URL with the user first, especially before running anything under `prod/`.
 
 ## Repository layout
 
 All data manipulation scripts live under `data/import/`, organised by lifecycle:
 
 ```
-data/import/
-├── prereq/          # Reference/lookup data — runs first in every environment; idempotent
-├── prod/            # Production initial data — runs once in prod only
-├── dev/             # Dev/test seed data — never runs in prod
-├── temp/            # One-off scripts — deleted immediately after confirmed execution
-└── RUNLOG.md        # Execution log — which scripts ran, where, when
+<repo-root>/
+├── .env.dev / .env.uat / .env.prod   # target environment descriptors (owned by ppbp-init)
+└── data/
+    └── import/
+        ├── prereq/      # Reference/lookup data — runs first in every environment; idempotent
+        ├── prod/        # Production initial data — runs once in prod only
+        ├── dev/         # Dev/test seed data — never runs in prod
+        ├── temp/        # One-off scripts — deleted immediately after confirmed execution
+        └── RUNLOG.md    # Execution log — which scripts ran, where, when
 ```
+
+- `data/` holds **records only**. The schema (tables, columns, Choices) and its review docs live under `dataverse/` — see `ppbp-dv-metadata-overview`.
 
 **Do not create these subfolders proactively.** Create a subfolder the first time a script of that type is needed.
 
@@ -62,6 +70,8 @@ These rules apply to every script in `data/import/`, regardless of type:
 | Anti-pattern | Correct approach |
 |---|---|
 | Running a script without verifying the active connection or target environment. | Establish/verify the connection via `dataverse:dv-connect` and confirm the environment first. |
+| Hard-coding an environment URL in a script. | Read it from the root `.env.<stage>` descriptor. |
+| Creating or changing tables, columns or Choices from a data script. | Schema changes are made in the dev unmanaged solution, never from a data script (`ppbp-dv-metadata-overview`). |
 | Hardcoded GUIDs — breaks when the script runs in a different environment. | Resolve IDs by natural key at runtime. |
 | Create without existence check — re-running creates duplicates. | Always use upsert or check before create. |
 | Dev seed data in `prod/` or vice versa — risks loading test garbage into production. | Strict subfolder separation: `dev/` vs `prod/`. |
@@ -74,7 +84,8 @@ This skill covers data manipulation orientation and repository layout only. It d
 
 - Script naming conventions, lifecycle, and idempotency details → `ppbp-dv-data-scripts`
 - Import logic, bulk operations, and dependency ordering → `ppbp-dv-data-import`
-- Dataverse table and column schema → `ppbp-dv-tables`, `ppbp-dv-columns`
+- Dataverse schema design and naming → `ppbp-dv-metadata-overview`
+- Environment descriptors (`.env.<stage>`) → `ppbp-init`
 - Connection setup, authentication, and environment connection → `dataverse:dv-connect`
 - Solution lifecycle and environment strategy → `ppbp-alm-solutions`
 - Project-level repository layout → `ppbp-overview`

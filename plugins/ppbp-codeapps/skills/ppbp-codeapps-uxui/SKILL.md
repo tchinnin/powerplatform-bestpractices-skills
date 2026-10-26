@@ -13,7 +13,7 @@ model: sonnet
 allowed-tools: Read, Bash, Grep, Glob, WebSearch
 metadata:
   author: powerplatform-bestpractices
-  version: "1.2.0"
+  version: "1.3.0"
 ---
 
 ## Official skill
@@ -48,29 +48,20 @@ cleanly *through* the stack, not bolted on:
   token layer is its machine translation. Keep them in sync; when the guideline
   changes, change the tokens, not individual components.
 
-## The `uxui/` repository layout
+## Design assets in `uxui/`
 
-Design assets live in a single top-level `uxui/` folder at the repo root, kept
-separate from the Code App project(s) under `codeapps/`:
-
-```
-<repo-root>/
-└── uxui/
-    ├── guidelines.md           # the design spec: colours, typography, spacing, layout
-    ├── assets/                 # logo, icons, illustrations, fonts referenced by apps
-    └── <app-name>/             # design previews for ONE app (matches codeapps/<app-name>)
-        ├── <app-name>-home.html
-        └── <app-name>-detail.html   # one HTML per screen, or one file for the whole app
-```
+The folder layout (`uxui/guidelines.md`, `uxui/assets/`, `uxui/codeapps/<app-name>/`)
+is defined in `ppbp-codeapps-overview`. This skill owns what goes in it:
 
 - **`guidelines.md`** — the written design system: colour palette (with roles, not
   just hexes), typography scale, spacing/disposition rules, component conventions.
-  This is the source the token layer is built from.
+  This is the source the token layer is built from, and it is shared with Generative
+  Pages — this skill owns its skeleton.
 - **`assets/`** — shared brand assets (logo, icons, custom fonts) referenced by the
   apps. Import production copies into the app's own assets; do not hot-link across
   folders at build time.
-- **`<app-name>/`** — HTML design previews (e.g. generated with Claude design) for a
-  specific app, one file per page or one file for the whole flow. The folder name
+- **`codeapps/<app-name>/`** — HTML design previews (e.g. generated with Claude design)
+  for one app, one file per screen or one file for the whole flow. The path
   **mirrors** `codeapps/<app-name>` so each preview is clearly associated with its app
   (a naming convention only — preview content is not kept in sync with the code).
 
@@ -97,7 +88,7 @@ accessibility mandates.
 
 ## HTML previews are design artifacts, not the app
 
-The `.html` files under `uxui/<app-name>/` are **mockups** — a visual contract to
+The `.html` files under `uxui/codeapps/<app-name>/` are **mockups** — a visual contract to
 implement against. They are never shipped or imported as the running app.
 Re-implement each preview as React components in the chosen UI approach, styled from
 the token layer; the preview's structure and look are the target, the stack and your
@@ -119,13 +110,13 @@ embodies. Use the preview as the design contract for *how it should feel and beh
 and let the implementation differ in specifics as long as it honours that intent.
 
 When a **major new page or feature** comes up, a developer *may* add a fresh preview
-under `uxui/<app-name>/` to align on the look before building it — treat that as a new
+under `uxui/codeapps/<app-name>/` to align on the look before building it — treat that as a new
 design milestone, not an obligation to retrofit previews for existing screens.
 
 ## Workflow
 
 1. Write/refresh `uxui/guidelines.md` (palette, type scale, spacing).
-2. Optionally generate HTML previews per screen under `uxui/<app-name>/` to agree on
+2. Optionally generate HTML previews per screen under `uxui/codeapps/<app-name>/` to agree on
    the look before coding.
 3. Translate `guidelines.md` into a design-token layer (CSS variables and/or a typed
    tokens module; or your library's theme), applied once at the app root.
@@ -145,7 +136,7 @@ note on feeding tokens into a component library's theme), load
 | Overriding a component library's styles per-instance instead of theming it. | Feed tokens into the library's theme/provider once; let them propagate. |
 | Hand-rolling interactive controls (menus, dialogs, tabs) instead of using accessible primitives — keyboard/ARIA support is hard to get right. | Build on an accessibility-first library (Fluent UI, Radix UI) that ships these compliant by design. |
 | A brand colour that fails WCAG contrast, or conveying state by colour alone. | Fix contrast at the token source; pair colour with text/icon. |
-| Shipping or importing the `uxui/<app>/*.html` previews as the actual app. | Treat HTML as a mockup; re-implement it as styled React components. |
+| Shipping or importing the `uxui/codeapps/<app>/*.html` previews as the actual app. | Treat HTML as a mockup; re-implement it as styled React components. |
 | Retrofitting old previews to match shipped code, or treating preview/code drift as a defect. | Leave previews as point-in-time references; only add a new preview for a major new page/feature. |
 | Diverging so far from a preview that its core UX/UI principles (hierarchy, layout language, branding, interaction patterns) are abandoned. | Diverge in the details; honour the design intent the preview embodies. |
 | Putting design assets inside one app's `src/` only — other apps can't reuse them. | Keep shared brand assets in `uxui/assets/`; copy production-needed ones into the app. |
@@ -157,6 +148,7 @@ design assets, and HTML previews for Code Apps. It does not cover:
 
 - Domain orientation and repository layout → `ppbp-codeapps-overview`
 - Repo / dependency / config conventions → `ppbp-codeapps-setup`
+- React code-level accessibility, forms and component structure → `ppbp-codeapps-react`
 - Generated data-access code, bundle optimisation, data-fetching hygiene → `ppbp-codeapps-connectors`
 - The scaffold / init / auth / deploy procedure and the stack itself → `code-apps-preview:create-code-app`
 - Generative Pages inside model-driven apps → `ppbp-genpages-overview`, `model-apps:genpage`

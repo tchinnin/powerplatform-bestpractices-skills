@@ -12,7 +12,7 @@ model: sonnet
 allowed-tools: Read, Bash, Grep, Glob, WebSearch
 metadata:
   author: powerplatform-bestpractices
-  version: "1.0.0"
+  version: "1.1.1"
 ---
 
 ## Official skill
@@ -35,11 +35,13 @@ Name, one-paragraph functional description, business context. No technical jargo
 
 ### 2. Environments
 
-| Environment | URL | Purpose |
+| Environment | Descriptor | Purpose |
 |---|---|---|
-| Dev | `https://<org>.crm.dynamics.com` | Active development |
-| Test | `https://<org>.crm.dynamics.com` | QA / UAT |
-| Prod | `https://<org>.crm.dynamics.com` | Production |
+| Dev | [`.env.dev`](./.env.dev) | Active development — the only environment with unmanaged solutions |
+| UAT | [`.env.uat`](./.env.uat) | QA / user acceptance — managed imports only |
+| Prod | [`.env.prod`](./.env.prod) | Production — managed imports only |
+
+Environment URLs and tenant IDs live **only** in the root `.env.<stage>` files, which `ppbp-init` creates. The README points to them and describes each environment's purpose; it never repeats the URLs.
 
 ### 3. Publisher and project code
 
@@ -59,7 +61,7 @@ Mermaid diagram covering: Dataverse tables, Power Apps, Power Automate flows, ex
 
 ### 6. Prerequisites
 
-Required CLI tools and minimum versions: `pac`, `python ≥ 3.10`, `node ≥ 18`.
+Required CLI tools and minimum versions: `pac`, `python ≥ 3.10`, Azure CLI (`az login` — authentication for Python tooling against Dataverse), `node ≥ 18`.
 
 ### 7. Getting started
 
@@ -67,18 +69,18 @@ Exact commands a new developer runs after cloning.
 
 ### 8. Repository map
 
-One line per top-level folder explaining what it contains.
+One line per top-level folder explaining what it contains. Folder names follow the canonical layout in `ppbp-overview`.
 
-## Data model files (`data/model/`)
+## Data model docs (`dataverse/model/`)
 
-Each `.md` file in `data/model/` is a domain-scoped model document. It must contain:
+Each `.md` file in `dataverse/model/` is a domain-scoped model document for agent and human review. It must contain:
 
 1. **Domain name and short description** (H1 heading).
 2. **Mermaid ERD** — `erDiagram` syntax with all tables, FK relationships, and cardinality.
 3. **Table specs** — one section per table: Display Name, Schema Name, Description, full column list, relationship list.
 4. **Open questions** — unresolved design decisions; clear them as decisions are made.
 
-Always maintain a model doc alongside every schema script in `data/scripts/`. The model doc is the source of truth; the script is derived from it.
+The model doc is the review view of the schema, whatever its source (the dev environment, or a schema-as-code tool under `dataverse/`). Update it in the same change as the schema.
 
 ## When to update README.md
 
@@ -87,7 +89,7 @@ Update `README.md` immediately after:
 - Adding, renaming, or removing a Dataverse table → update the architecture diagram and data model section.
 - Creating or restructuring a Power Platform solution → update the solutions section and dependency diagram.
 - Scaffolding a new Code App, plugin project, or Generative Page → update the repository map.
-- Changing environment URLs → update the Environments table.
+- Adding an environment or changing its purpose → update the Environments table (URLs change only in `.env.<stage>`).
 - Adding a new external integration → update the architecture diagram.
 
 ## Anti-patterns (DO NOT DO)
@@ -95,10 +97,11 @@ Update `README.md` immediately after:
 | Anti-pattern | Correct approach |
 |---|---|
 | Leaving `README.md` as a stub or with only placeholder text | Fill in every required section; agents read it before every task — an empty README breaks routing |
-| Writing environment URLs, solution names, or publisher prefix in the agent instruction file instead of `README.md` | All project context belongs in `README.md`; the instruction file only references it |
-| Skipping `data/model/` docs and committing only schema scripts | The model doc is the source of truth; always create or update it before or alongside the script |
+| Writing environment URLs, solution names, or publisher prefix in the agent instruction file | Environment URLs belong in `.env.<stage>`; solutions and publisher in `README.md`; the instruction file only references them |
+| Copying environment URLs into the README Environments table | Point to `.env.<stage>` and describe the purpose |
+| Changing the schema without updating the `dataverse/model/` doc | Update both in the same change — reviewers read the `.md` |
 | Updating `README.md` architecture section only at project start | Keep it current after every schema or app change; a stale architecture diagram misleads agents |
-| One flat `data/model/` file for all tables | One file per domain or table group; large monolithic files are hard to navigate and update |
+| One flat `dataverse/model/` file for all tables | One file per domain or table group; large monolithic files are hard to navigate and update |
 
 ## Skill boundaries
 
@@ -106,5 +109,5 @@ This skill covers README.md content and maintenance only. It does not cover:
 
 - Initial project setup and agent instruction files → `ppbp-init`
 - Project layout and skill routing → `ppbp-overview`
-- Dataverse schema scripting → `dataverse:dv-metadata`, `ppbp-dv-tables`
+- Dataverse schema design → `ppbp-dv-metadata-overview`, `ppbp-dv-tables`
 - Solution design → `ppbp-alm-solutions`

@@ -13,7 +13,7 @@ model: sonnet
 allowed-tools: Read, Bash, Grep, Glob, WebSearch
 metadata:
   author: powerplatform-bestpractices
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 ## Official skill
@@ -77,33 +77,22 @@ plug into the official `themeToVars` mechanism without a second provider — liv
 writing any theming code, and load the official skill's `rules.md` for the
 `themeToVars` pattern itself (this skill never restates it).
 
-## The shared `uxui/` layout
+## The shared `uxui/` folder
 
 Generative pages reuse the **same** top-level `uxui/` folder and the **same**
-`guidelines.md` as Code Apps — one design system for the repo. Page previews live in a
-dedicated `genpages/` subfolder, one folder per page:
-
-```
-<repo-root>/
-└── uxui/
-    ├── guidelines.md           # shared design spec — colours, typography, spacing
-    ├── assets/                 # shared logo, icons, fonts
-    ├── <app-name>/             # Code App previews (see ppbp-codeapps-uxui)
-    └── genpages/               # generative-page previews
-        └── <page-name>/        # one folder per page — name mirrors genpages/<…>/<page-name>
-            └── <page-name>.html
-```
+`guidelines.md` as Code Apps — one design system for the repo. The folder layout is
+defined in `ppbp-genpages-overview`; this skill owns what goes in it:
 
 - **`guidelines.md`** is shared and identical in format to the Code App one — the
   skeleton is owned by `ppbp-codeapps-uxui`; do not duplicate it here. The same palette,
   type scale and spacing rules drive both Code Apps and generative pages.
-- **`genpages/<page-name>/`** holds the HTML design preview(s) for one page. The folder
-  name **mirrors** the page's source folder under `genpages/<model-app-name>/<page-name>/`
-  (see `ppbp-genpages-overview`) so design and code stay paired.
+- **`genpages/<model-app-name>/<page-name>/`** holds the HTML design preview(s) for one
+  page. The path **mirrors** the page's source folder
+  `genpages/<model-app-name>/<page-name>/` so design and code stay paired.
 
 ## HTML previews are design artifacts, not the page
 
-The `.html` files under `uxui/genpages/<page-name>/` are **mockups** — a visual
+The `.html` files under `uxui/genpages/<model-app-name>/<page-name>/` are **mockups** — a visual
 contract to implement against, never shipped. Re-implement each as a Fluent UI v9
 `.tsx` page styled from the brand theme. Make previews **look Fluent-native** (Fluent
 spacing, control shapes, type scale) so they read as a realistic model-driven page,
@@ -124,7 +113,7 @@ retrofit previews for existing pages.
 ## Workflow
 
 1. Write/refresh the shared `uxui/guidelines.md` (palette, type scale, spacing).
-2. Optionally generate a Fluent-native HTML preview under `uxui/genpages/<page-name>/`
+2. Optionally generate a Fluent-native HTML preview under `uxui/genpages/<model-app-name>/<page-name>/`
    to agree on the look before coding.
 3. If branding beyond the host theme is needed, translate `guidelines.md` into a
    Fluent **brand theme** — a `BrandVariants` ramp plus `createLightTheme` /
@@ -144,7 +133,7 @@ retrofit previews for existing pages.
 | Branding so heavily the page no longer looks like part of the model-driven app. | Apply brand to accents/primary actions; keep Fluent neutrals, sizing and structure. |
 | Restating genpage's Fluent APIs, theme-provider wiring, or page model here. | Point to `model-apps:genpage`; keep only branding conventions here. |
 | Duplicating the `uxui/guidelines.md` skeleton in this plugin. | Reuse the shared one — its skeleton is owned by `ppbp-codeapps-uxui`. |
-| Shipping or importing the `uxui/genpages/<page>/*.html` previews as the page. | Treat HTML as a mockup; re-implement as a themed Fluent `.tsx` page. |
+| Shipping or importing the `uxui/genpages/<app>/<page>/*.html` previews as the page. | Treat HTML as a mockup; re-implement as a themed Fluent `.tsx` page. |
 | Retrofitting old previews to match shipped code, or treating preview/code drift as a defect. | Leave previews as point-in-time references; add a new preview only for a major new page. |
 
 ## Skill boundaries

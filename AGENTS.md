@@ -1,8 +1,29 @@
-# CLAUDE.md — Power Platform Best Practices Plugin
+# AGENTS.md — Power Platform Best Practices Plugin
+
+These are the authoring and consistency rules for this repository. Every coding agent reads this file. There is no `CLAUDE.md` and no `.github/copilot-instructions.md`, and none should be added.
 
 ## What This Repo Is
 
-A plugin for Claude Code and GitHub Copilot that distributes Power Platform best-practice skills. Skills teach agents the right patterns for Dataverse, ALM, Code Apps, Generative Pages, and Dataverse Plugins — without being tied to a specific SDK or toolchain.
+A plugin marketplace that distributes Power Platform best-practice skills. Skills teach agents the right patterns for Dataverse, ALM, Code Apps, Generative Pages, and Dataverse Plugins — without being tied to a specific SDK or toolchain.
+
+**Supported agents:** Claude Code and GitHub Copilot (CLI and VS Code). Both read the same `.claude-plugin/` manifests, so one set of files serves both. Do not add manifests for other agents (`.plugin/`, `.github/plugin/`, `.cursor-plugin/`, `.codex-plugin/`, root `marketplace.json`).
+
+## Single source of truth
+
+Every piece of content lives in exactly one place:
+
+| Content | Only location |
+|---|---|
+| Skills (SKILL.md + `references/`) | `plugins/<plugin>/skills/<skill>/` |
+| Skill tooling (scripts, schemas, tests) | `plugins/<plugin>/skills/<skill>/{scripts,references,tests}/` of the skill that documents it |
+| Agents | `plugins/<plugin>/agents/ppbp-<name>.agent.md` |
+| Hooks | `plugins/<plugin>/hooks/hooks.json` |
+| Plugin manifest | `plugins/<plugin>/.claude-plugin/plugin.json` |
+| Marketplace registry + marketplace version | `.claude-plugin/marketplace.json` |
+| Routing within a domain | The `## Domain scope` table of the domain's overview skill |
+| Authoring rules | This file |
+
+Never copy skills, manifests, or routing tables to another place (no per-plugin `AGENTS.md`/`CLAUDE.md`, no symlinks, no mirrored manifests).
 
 ## Official Skills vs Best-Practice Skills
 
@@ -29,6 +50,13 @@ When authoring or updating a skill, always check the corresponding official skil
 
 **Authoring test:** for every concrete statement ask *"does the official skill already say this?"* — if yes, delete it and point to the official skill; if no, and it is a useful team convention, keep it. If a skill's additive surface is thin after this pass, the skill must shrink accordingly — never pad it with restated official content.
 
+### The implementation-neutral rule
+
+**ppbp owns conventions, never a tool.** A `ppbp-*` skill states what a good result looks like (naming, design, defaults, safety principles) so the user can apply it with any implementation: the maker portal, the official skills, PAC CLI, or a schema-as-code tool.
+
+- A skill must not depend on a specific implementation's file format, script, agent or hook, and must not route to one as the way to do the work. Procedures belong to the official skills.
+- The companion [`dataverse-as-code`](https://github.com/tchinnin/dataverse-as-code) marketplace implements schema and plug-in registrations as code. It may be cited only as **one optional implementation**: in `README.md` and in one line of the `ppbp-dv-metadata-overview` and `ppbp-dv-plugins-overview` principles. It never encodes ppbp conventions, and ppbp never encodes its format.
+
 ## Plugin Architecture
 
 ### Structure
@@ -38,14 +66,38 @@ Skills are distributed as **domain plugins**, not as a flat list. The marketplac
 ```
 marketplace: powerplatform-bestpractices
 └── plugin: ppbp-<domain>/
-    ├── .plugin/
-    │   └── plugin.json
     ├── .claude-plugin/
-    │   └── plugin.json   ← legacy backward-compat copy
+    │   └── plugin.json   ← the only manifest (read by Claude Code and Copilot)
+    ├── agents/                               ← optional
+    │   └── ppbp-<name>.agent.md
+    ├── hooks/                                ← optional
+    │   └── hooks.json
     └── skills/
         ├── ppbp-<domain>-overview/SKILL.md   ← required in every domain plugin
-        └── ppbp-<domain>-<task>/SKILL.md     ← one per specific concern
+        └── ppbp-<domain>-<task>/
+            ├── SKILL.md                      ← one per specific concern
+            ├── references/                   ← optional (incl. JSON Schemas, samples)
+            ├── scripts/                      ← optional — tooling owned by this skill
+            └── tests/                        ← required when scripts/ exists
 ```
+
+### Agents, hooks and scripts
+
+Most plugins contain only skills. Add the optional parts only when a domain needs deterministic tooling that checks a ppbp convention (none currently). Tooling that implements Dataverse changes belongs in `dataverse-as-code`, not here.
+
+- **Agents** — `agents/ppbp-<name>.agent.md`.
+  - The `.agent.md` suffix is what GitHub Copilot CLI expects. Claude Code reads any `.md` file in `agents/` and takes the agent's name from the frontmatter.
+  - Frontmatter: `name` (same as the file name), `description` (what the agent does plus when to use it), `tools`, `model: sonnet`.
+  - An agent can't talk to the user. Any step that needs user confirmation must return to the caller and wait to be re-invoked. Never let an agent apply a change the user hasn't confirmed.
+  - List the agent in the overview's `## Domain scope`.
+- **Scripts** — live in the `scripts/` folder of the skill that documents them, never at the plugin root.
+  - Use Python ≥ 3.9 with dependencies in `scripts/requirements.txt`.
+  - Ship offline tests in the skill's `tests/` folder (stdlib `unittest`).
+  - Scripts that call Dataverse authenticate with the Azure CLI token (`az login`), read their target only from the project's `.env.<stage>` descriptors, and refuse to run against a stage they are not meant for.
+- **Hooks** — `hooks/hooks.json` in Claude Code format.
+  - Reference scripts with `${CLAUDE_PLUGIN_ROOT}/skills/<skill>/scripts/…`.
+  - A hook must exit immediately (code 0) for files it doesn't own, and must never block a developer whose environment isn't set up.
+  - Copilot CLI's hook format is not guaranteed to match, so a skill must never *depend* on its hook. The skill or agent also runs the same check explicitly.
 
 ### The overview skill
 
@@ -78,7 +130,7 @@ When in doubt, add a skill to an existing plugin before creating a new plugin.
 
 ### plugin.json per domain
 
-Every plugin directory under `plugins/<domain>/` must contain a manifest at `.plugin/plugin.json`, plus a legacy copy at `.claude-plugin/plugin.json` with identical content (for Claude Code backward compatibility):
+Every plugin directory under `plugins/<domain>/` contains exactly one manifest, at `.claude-plugin/plugin.json`. Every plugin must also be registered in `.claude-plugin/marketplace.json` with `"source": "./plugins/<domain>"`, and the `name` must match in both files:
 
 ```json
 {
@@ -193,14 +245,13 @@ When a topic has a **specific implementation pitfall** — a non-obvious API beh
 
 Example:
 ```markdown
-## Common issue: Global Choices and solutions
+## Common issue: stale plan
 
-Creating a Global Choice via the Web API does not add it to a solution automatically —
-a second `AddSolutionComponent` call (ComponentType 9) is required.
+`apply` recomputes the plan and aborts if it differs from the saved file — someone
+changed the model or the environment after `plan`.
 
-If you are scripting Global Choices in a solution context, load
-[`references/global-choices-in-solutions.md`](references/global-choices-in-solutions.md)
-before writing any code.
+Re-run `plan`, confirm again, and apply the new file. Details in
+[`references/plan-apply.md`](references/plan-apply.md).
 ```
 
 **In `references/<topic>.md` — the full treatment:**
@@ -222,11 +273,11 @@ Before creating a new skill, verify no existing skill already covers the domain.
 
 ## Version Management
 
-This repo uses a two-level versioning structure:
+This repo uses a three-level versioning structure:
 
 - **Skill level** — update `metadata.version` in the skill's frontmatter whenever the skill body changes.
-- **Plugin level** — each domain plugin has its own manifest at `plugins/<domain>/.plugin/plugin.json` (with a legacy copy at `plugins/<domain>/.claude-plugin/plugin.json`). Bump `version` in both files whenever a skill in the plugin changes (treat the plugin version as an aggregate of its skills).
-- **Marketplace level** — bump `version` in `.claude-plugin/plugin.json` when a plugin is added, removed, or renamed in the marketplace.
+- **Plugin level** — bump `version` in `plugins/<domain>/.claude-plugin/plugin.json` whenever a skill in the plugin changes (treat the plugin version as an aggregate of its skills).
+- **Marketplace level** — bump `metadata.version` in `.claude-plugin/marketplace.json` when a plugin is added, removed, or renamed, or when the repository structure changes.
 
 **Semantic versioning rules:**
 

@@ -1,70 +1,86 @@
 ---
 name: ppbp-dv-plugin-build
 description: >
-  Dataverse plug-in project scaffolding, build, and deployment. Use when the user is
-  initialising a plug-in project (pac plugin init), generating early-bound classes
-  (pac modelbuilder build), bumping assembly version, running a release build
-  (dotnet clean + dotnet build), or deploying with pac plugin push. Also use when
-  the user asks about .snk files, NuGet metadata, or the Plugin Registration Tool
-  for first-time deployment.
+  Dataverse plug-in project scaffolding, versioning and release build. Use when the user
+  is initialising a plug-in project (pac plugin init), generating early-bound classes
+  (pac modelbuilder build), bumping the assembly version, or running a release build
+  (dotnet clean + dotnet build) to produce the .nupkg. Also use when the user asks
+  about signing, .snk files, or NuGet package metadata.
 license: MIT
 user-invocable: true
 model: sonnet
 allowed-tools: Read, Write, Edit, Bash, Grep, Glob, WebSearch
 metadata:
   author: powerplatform-bestpractices
-  version: "1.2.0"
+  version: "2.1.0"
 ---
 
 ## Official skill
 
-No official Microsoft skill exists for this topic. Dataverse plug-in authoring (IPlugin, Custom APIs, PAC CLI plugin workflow) is not covered by any official skill in the `dataverse:*` namespace.
+No official Microsoft skill exists for plug-in project setup and build. Dataverse plug-in authoring (IPlugin, Custom APIs, the PAC CLI plug-in workflow) is not covered by any official skill in the `dataverse:*` namespace.
 
 ## Best practices
 
-1. **Target .NET Framework 4.6.2** for on-premises compatibility and **net8.0** for isolated (sandbox) plug-ins on the cloud — choose at project creation, not after.
-2. **Always scaffold with `pac plugin init`** — it generates `PluginBase.cs`, the strong-name key (`.snk`), and the correct `.csproj` NuGet package configuration.
-3. **Increment `AssemblyVersion` and `FileVersion` in `.csproj` before every deployment** — Dataverse uses the version to detect assembly changes; deploying without a version bump silently skips the update.
-4. **Deploy the NuGet package (`.nupkg`), never the raw `.dll`.** `pac plugin push` defaults to `--type Nuget`; pushing the bare assembly bypasses the plug-in package model the project is built around. Always point `--pluginFile` at the generated `.nupkg`.
-5. **Never hand-edit the generated early-bound classes** in `Models/` — they are build output; regenerate with `pac modelbuilder build` when the schema changes (see `ppbp-dv-plugins-overview`).
+1. **Target .NET Framework 4.8 (`net48`) for every plug-in project.** Plug-ins run on .NET Framework in the Dataverse sandbox.
+   - `net8.0` is only for **client-side** code that calls Dataverse through the SDK: console apps, Azure Functions, integration tools. Never use it for a plug-in project.
+   - `pac plugin init` scaffolds `net462`: switch `<TargetFramework>` to `net48` right after init.
+2. **Always scaffold with `pac plugin init`.** It generates `PluginBase.cs` and the correct `.csproj` NuGet package configuration.
+   - For a **plug-in package**, the default for new projects, pass `--skip-signing`. Packages don't need signed assemblies, and if one assembly is signed, every assembly it depends on must be signed too.
+   - Keep the generated strong-name key (`.snk`) only for a project registered as a plug-in **assembly**: signing is mandatory there.
+3. **Ask the user for the root namespace before scaffolding — never invent it.** Recommend `Company.Team.Project`:
+   - `Company`: the organisation.
+   - `Team`: often the solution publisher, but not always.
+   - `Project`: the project code.
+
+   Keep it consistent with the solution publisher and the project code, both recorded in `README.md`. For example, publisher *Contoso Sales* with project code `crm` gives `Contoso.Sales.Crm`. Early-bound classes go in `<RootNamespace>.Models`.
+4. **Set the NuGet package id once.** On the server, the package is named `{publisher prefix}_{package id}`, and that name is permanent once registered.
+5. **Bump the build or revision part of `AssemblyVersion` and `FileVersion` before every release.**
+   - Never change the major or minor part of a registered assembly: on solution import it becomes a different assembly, and existing steps keep pointing to the old one.
+6. **Never hand-edit the generated early-bound classes** in `Models/`. They are build output; regenerate them with `pac modelbuilder build` when the schema changes (see `ppbp-dv-plugins-overview`).
 
 ## PAC CLI workflow
 
 ### 1 — Scaffold the project
 
 ```sh
-pac plugin init --outputDirectory <ProjectName> --author "<Author>"
+pac plugin init --outputDirectory <ProjectName> --author "<Author>" --skip-signing
 ```
 
-Generates: `PluginBase.cs`, `<ProjectName>.snk`, `<ProjectName>.csproj`, sample plugin file.  
-After init: set `<RootNamespace>`, update NuGet metadata (Company, Description), leave `<PluginId>` empty until first deployment.
+This generates `PluginBase.cs`, `<ProjectName>.csproj` and a sample plugin file (plus `<ProjectName>.snk` without `--skip-signing`). After init:
+
+- Set `<TargetFramework>` to `net48`.
+- Set `<RootNamespace>` to the namespace the user confirmed (best practice 3).
+- Update the NuGet metadata (`PackageId`, Company, Description).
 
 ### 2 — Generate early-bound classes
 
 ```sh
 pac modelbuilder build \
   --outdirectory <ProjectName>/Models \
-  --namespace <Company>.<Product>.Models \
+  --namespace <RootNamespace>.Models \
   --environment https://<org>.crm.dynamics.com/ \
   --emitfieldsclasses \
   --generateGlobalOptionSets \
   --entitynamesfilter "table1;table2;table3"
 ```
 
-Do **not** add `--generatesdkmessages` — it floods the project with SDK message classes that are not needed.
+Do **not** add `--generatesdkmessages`: it floods the project with SDK message classes that are not needed.
 
-The generated `Models/` are **build output — never hand-edit them**. When the schema changes, re-run this command to regenerate; manual edits are lost on the next run and diverge from the live schema.
+The generated `Models/` are **build output — never hand-edit them**. When the schema changes, re-run this command to regenerate. Manual edits are lost on the next run and diverge from the live schema.
 
-### 3 — Increment version before every build
+### 3 — Increment the version before every release build
 
-In `.csproj`, bump both fields:
+In `.csproj`, bump the build or revision part of both fields:
 
 ```xml
 <AssemblyVersion>1.0.1.0</AssemblyVersion>
 <FileVersion>1.0.1.0</FileVersion>
 ```
 
-Use **Major.Minor.Patch.Build**: Patch for bug fixes, Minor for new features, Major for breaking changes.
+Use **Major.Minor.Build.Revision**:
+
+- Build or Revision for every release.
+- Major and Minor only for a deliberate new assembly, together with a step migration.
 
 ### 4 — Release build
 
@@ -72,50 +88,39 @@ Use **Major.Minor.Patch.Build**: Patch for bug fixes, Minor for new features, Ma
 dotnet clean && dotnet build -c Release
 ```
 
-`dotnet clean` is mandatory — without it the NuGet package is not regenerated and the version bump is silently ignored.
+`dotnet clean` is mandatory: without it the NuGet package is not regenerated, and the version bump is silently ignored.
 
-Output: `bin/Release/net462/<ProjectName>.dll` and `bin/Release/<ProjectName>.<Version>.nupkg`. **Deploy the `.nupkg`** — the `.dll` is just an intermediate artifact.
+The build produces `bin/Release/net48/<ProjectName>.dll` and `bin/Release/<PackageId>.<Version>.nupkg`. **The `.nupkg` is the deployable artifact**; the `.dll` is just an intermediate one.
 
-### 5 — Deploy
+### 5 — Register and deploy
 
-**First deployment** — `pac plugin push` requires an existing plugin GUID. Register the assembly once via the Plugin Registration Tool, then store the returned GUID in `.csproj`:
+The official `dataverse:dv-overview` skill owns the registration procedure: the first registration of the `.nupkg` goes through the Web API, later builds through `pac plugin push`. Whatever tool runs it, deploy only to the dev environment (`.env.dev`), into its unmanaged solution, and record the package id with the project.
 
-```xml
-<PluginId>xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx</PluginId>
-```
-
-**Subsequent deployments** — read the GUID from `.csproj` and push:
-
-```sh
-PLUGIN_ID=$(dotnet msbuild <ProjectName>.csproj -getProperty:PluginId -nologo)
-pac plugin push --pluginId "$PLUGIN_ID" --pluginFile ./bin/Release/<ProjectName>.<Version>.nupkg
-```
-
-For the **dev inner loop**, push the assembly by `--pluginId` rather than `--solution-name` — direct-by-GUID is faster and avoids a solution dependency on every iteration. For **cross-environment promotion**, the assembly must still ship inside a solution exported/imported via the official `dataverse:dv-solution` skill — that is the ALM path, not a per-iteration push.
+For **cross-environment promotion**, the package ships inside a solution exported and imported with the official `dataverse:dv-solution` skill. That is the ALM path, not a per-iteration push.
 
 ## Common issue: dotnet clean and version bumps
 
-Skipping `dotnet clean` before a release build silently deploys the old assembly even when `.csproj` has been updated with a new version number — the NuGet package is not regenerated. Always run `dotnet clean && dotnet build -c Release`.
-
-## Common issue: First deployment requires the Plugin Registration Tool
-
-`pac plugin push --pluginId` requires a GUID that only exists after the assembly has been registered at least once. There is no CLI-only path for the initial registration — the Plugin Registration Tool (available via NuGet: `Microsoft.CrmSdk.XrmTooling.PluginRegistrationTool`) must be used once to create the record and obtain the GUID, which is then stored in `<PluginId>` in `.csproj` for all subsequent deployments.
+Skipping `dotnet clean` before a release build silently deploys the old content even when `.csproj` has a new version number, because the NuGet package is not regenerated. Always run `dotnet clean && dotnet build -c Release`.
 
 ## Anti-patterns (DO NOT DO)
 
 | Anti-pattern | Correct approach |
 |---|---|
-| Using `--solution-name` for the dev inner loop — adds a solution dependency and is slower on every iteration. | For iteration, store the plugin GUID in `<PluginId>` and use `pac plugin push --pluginId ... --pluginFile ...`. For promotion, ship the assembly in a solution via `dataverse:dv-solution`. |
-| Skipping `dotnet clean` before a release build — The NuGet package is not regenerated; a version bump in `.csproj` is silently ignored. | Always run `dotnet clean && dotnet build -c Release`. |
-| Creating plugin projects by hand without `pac plugin init` — Misses PluginBase, .snk, and correct NuGet config. | Always scaffold with `pac plugin init`. |
-| Pushing the raw `.dll` (`--type Assembly`) — bypasses the plug-in package model the project is built around. | Push the generated `.nupkg`; `pac plugin push` uses `--type Nuget` by default. |
+| Skipping `dotnet clean` before a release build — the NuGet package is not regenerated. | Always run `dotnet clean && dotnet build -c Release`. |
+| Creating plugin projects by hand without `pac plugin init` — misses PluginBase and the correct NuGet config. | Always scaffold with `pac plugin init`. |
+| Inventing the root namespace, or using the project folder name as is. | Ask the user; recommend `Company.Team.Project`, consistent with the publisher and the project code. |
+| Keeping the scaffolded `net462`, or targeting `net8.0` for a plug-in — `net8.0` is for client-side SDK code only. | Target `net48` for every plug-in project. |
+| Signing the assemblies of a plug-in package without a reason — every dependency must then be signed. | Scaffold packages with `--skip-signing`; sign only assembly-registered projects. |
+| Changing the major or minor version of a registered assembly — it becomes a different assembly on import, and steps keep the old one. | Bump build or revision only. |
+| Pushing a build to UAT or prod, or to whatever environment the pac profile points to. | Deploy to dev only, with the environment passed explicitly; promote through the managed solution. |
 | Hand-editing a generated early-bound class in `Models/` — lost on the next regeneration and diverges from the live schema. | Never edit generated classes; re-run `pac modelbuilder build` to regenerate. |
 
 ## Skill boundaries
 
-This skill covers plug-in project scaffolding, build, and deployment. It does not cover:
+This skill covers plug-in project scaffolding, versioning and build. It does not cover:
 
 - Domain orientation and repository layout → `ppbp-dv-plugins-overview`
+- Registration, first upload, `pac plugin push` (procedure) → `dataverse:dv-overview`
 - Step plugin implementation, execution pipeline, images → `ppbp-dv-step-plugin`
 - Custom API design and implementation → `ppbp-dv-custom-api`
-- Solution packaging, export/import (the authority for shipping the assembly) → `dataverse:dv-solution`, `ppbp-alm-solutions`
+- Solution packaging, export/import (the authority for shipping the package) → `dataverse:dv-solution`, `ppbp-alm-solutions`

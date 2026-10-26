@@ -13,7 +13,7 @@ model: sonnet
 allowed-tools: Read, Bash, Grep, Glob, WebSearch
 metadata:
   author: powerplatform-bestpractices
-  version: "1.2.0"
+  version: "1.2.1"
 ---
 
 ## Official skill
@@ -94,4 +94,4 @@ This skill covers Dataverse table design only. It does not cover:
 - Global Choices → `ppbp-dv-global-choices`
 - Writing or registering plug-in steps or Custom APIs → `ppbp-dv-plugins-overview`
 - Solution lifecycle, environment strategy, deployment pipelines → `ppbp-alm-solutions`
-- Writing the model and applying it (plan → apply) → `ppbp-dv-metadata-as-code`
+- Creating or changing tables (procedure) → `dataverse:dv-metadata`

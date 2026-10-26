@@ -3,19 +3,18 @@ name: ppbp-dv-metadata-overview
 description: >
   Dataverse schema design domain overview. Use when starting any schema task — tables,
   columns, global Choices, lookups — or when asking where the data model lives.
-  Provides the repository layout (dataverse/metadata as the metadata-as-code source of
-  truth, dataverse/model for review docs), the core naming rule (language split between
-  Display Name and Schema Name), the dev-only plan → confirm → apply principle, and
-  global conventions shared by every schema skill in this plugin. Load before
-  ppbp-dv-metadata-as-code, ppbp-dv-tables, ppbp-dv-columns, ppbp-dv-global-choices or
-  ppbp-dv-metadata-review.
+  Provides the repository layout (dataverse/model for review docs), the core naming rule
+  (language split between Display Name and Schema Name), the dev-only, confirm-first
+  change principles, and global conventions shared by every schema skill in this
+  plugin, whatever tool applies the changes. Load before ppbp-dv-tables,
+  ppbp-dv-columns, ppbp-dv-global-choices or ppbp-dv-metadata-review.
 license: MIT
 user-invocable: true
 model: sonnet
 allowed-tools: Read, Bash, Grep, Glob, WebSearch
 metadata:
   author: powerplatform-bestpractices
-  version: "2.0.0"
+  version: "3.0.0"
 ---
 
 ## Official skill
@@ -24,8 +23,8 @@ metadata:
 
 ## Connection
 
-- **Run Python against Dataverse with the Azure CLI token.** Sign in with `az login`, adding `--tenant <TENANT_ID>` when the account spans several tenants. The schema tooling in this plugin authenticates only this way.
-- **The target environment is described in `.env.dev`** at the repo root, which `ppbp-init` creates. Schema tooling never reads any other environment file.
+- **Run Python against Dataverse with the Azure CLI token.** Sign in with `az login`, adding `--tenant <TENANT_ID>` when the account spans several tenants.
+- **The dev environment is described in `.env.dev`** at the repo root, which `ppbp-init` creates. Whatever tool changes the schema, it targets that environment and nothing else.
 - `dataverse:dv-connect` owns environment discovery, tool installation and connection diagnostics. Use it to set up and check the connection.
 - Before any change, confirm the target URL and the active `az` account with the user.
 
@@ -33,27 +32,19 @@ metadata:
 
 ```
 <repo-root>/
-├── .env.dev                              # dev environment descriptor — the only target of schema tooling
+├── .env.dev                              # dev environment descriptor — the only target of schema changes
 └── dataverse/
-    ├── model/                            # REVIEW VIEW — for agents and humans
-    │   └── <domain>.md                   # Mermaid ERD + table specs + open questions, one per domain/table group
-    └── metadata/                         # SOURCE OF TRUTH — metadata as code
-        ├── _meta.dv.metadata.yaml        # publisher prefix, project code, solution, locale
-        ├── choices.dv.metadata.yaml      # every global Choice
-        └── tables/<key>.dv.metadata.yaml # one table per file; file name = key
+    └── model/                            # REVIEW VIEW — for agents and humans
+        └── <domain>.md                   # Mermaid ERD + table specs + open questions, one per domain/table group
 ```
 
-- **`dataverse/metadata/` is the source of truth.** When it disagrees with `dataverse/model/*.md`, the YAML wins.
-- **`dataverse/model/*.md` is the review view.** Update it in the same change as the YAML. Open questions and design discussion live there and never in the YAML. The required content of a model doc is defined in `ppbp-readme`.
-- The `*.dv.metadata.yaml` suffix leaves room for future `dataverse/*` model families (for example data or security) that follow the same pattern.
-- Plan files go in `<repo-root>/.dv-metadata/`, which is gitignored.
+- **`dataverse/model/*.md` is the review view of the schema.** Update it in the same change as the schema itself. Open questions and design discussion live there. The required content of a model doc is defined in `ppbp-readme`.
+- **If the project defines its schema as code**, the tool's source files live under `dataverse/`, in that tool's own format and paths. They never replace the review doc.
 
 ## Domain scope
 
 | Skill / agent | Covers |
 |---|---|
-| `ppbp-dv-metadata-as-code` | The `.dv.metadata.yaml` format, the `dv_metadata.py` tool (validate / plan / apply), the safety model |
-| `ppbp-dv-metadata-planner` (agent) | Runs the loop: writes the model, validates, plans, returns for confirmation, applies |
 | `ppbp-dv-metadata-review` | Read-only quality audit of any model, with a report by severity |
 | `ppbp-dv-tables` | Table naming, ownership, primary name column, cascade, security-first design |
 | `ppbp-dv-columns` | Column naming, type-specific suffixes, column type selection |
@@ -77,29 +68,29 @@ This rule applies to every schema object — tables, columns, and global Choices
 2. **Set `DisplayName` and `Description` on every object** — they surface in Power Apps and Copilot Studio.
 3. **Always use global Choices, never local option sets** — global Choices enable cross-table filtering and centralised translations. The official skill may demonstrate local (`IntEnum`) choices as a valid SDK technique; this is a deliberate team design policy layered on top, not a contradiction — when authoring choice columns, follow this policy.
 4. **Always use `UserOwned` for new tables** unless `OrganizationOwned` is explicitly requested and confirmed twice (ownership cannot be changed after data is loaded).
-5. **Schema changes are declarative and go through plan → confirm → apply.**
-   - Every table, column, global Choice, lookup or alternate key change is made in `dataverse/metadata/`.
-   - The user sees the exact plan before anything is applied.
-   - Nothing is ever deleted automatically.
-   - Schema changes happen only in the dev environment, in its unmanaged solution. UAT and prod receive the change through the ALM pipeline (`ppbp-alm-pipelines`).
+5. **Schema changes follow the same rules, whatever tool applies them.**
+   - They happen only in the dev environment, in its unmanaged solution. UAT and prod receive the change through the ALM pipeline (`ppbp-alm-pipelines`).
+   - The user sees and confirms the exact change before it is applied.
+   - Nothing is ever deleted automatically. A delete needs an explicit double confirmation.
+   - Prefer a reproducible, version-controlled definition of the change over one-off clicks or ad-hoc scripts. One implementation of this: the `dataverse-as-code` marketplace (`dvac-metadata`).
 
 ## Anti-patterns (DO NOT DO)
 
 | Anti-pattern | Correct approach |
 |---|---|
-| Ad-hoc scripts that create or change tables, columns or Choices | Describe the change in `dataverse/metadata/` and use plan → apply (`ppbp-dv-metadata-as-code`) |
-| Changing the YAML model without updating `dataverse/model/*.md` (or the reverse) | Update both in the same change; the YAML wins on conflict |
+| One-off scripts or unrecorded clicks that create or change tables, columns or Choices | Keep a reproducible, versioned definition of the change, and show it to the user before applying |
+| Changing the schema without updating `dataverse/model/*.md` | Update the review doc in the same change |
+| Applying a schema change the user hasn't confirmed | Show the exact change first, then apply |
 | Changing schema directly in UAT/prod, or in a managed solution | Change dev's unmanaged solution, then promote through the pipeline |
 | Using local option sets | Always create global Choices — see `ppbp-dv-global-choices` |
 | Display Names in English in a non-English environment | Use the environment's primary language for Display Names |
-| Running schema tooling without confirming the target URL and the `az` account | Confirm both with the user before planning |
+| Changing the schema without confirming the target URL and the `az` account | Confirm both with the user first |
 
 ## Skill boundaries
 
 This skill covers Dataverse schema domain orientation, repository layout, and the core naming rule. It does not cover:
 
-- Model format, plan/apply tooling → `ppbp-dv-metadata-as-code`
-- Running a schema change end to end → agent `ppbp-dv-metadata-planner`
+- Procedures that create or change schema objects → `dataverse:dv-metadata`
 - Reviewing a model → `ppbp-dv-metadata-review`
 - Table naming details, ownership, primary name column → `ppbp-dv-tables`
 - Column naming and type conventions → `ppbp-dv-columns`

@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "Best-practice skills for Power Platform development with Claude Code and GitHub Copilot",
-    "pluginRoot": "."
+    "version": "0.6.0"
   },
   "plugins": [
     {
@@ -23,25 +23,25 @@
     },
     {
       "name": "ppbp-codeapps",
-      "description": "Power Apps Code Apps best practices: scaffolding, connector integration, bundle optimisation, and deployment.",
+      "description": "Power Apps Code Apps best practices: repository structure, React conventions, connector integration, bundle optimisation, and UX/UI theming with the shared uxui/ design system.",
       "source": "./plugins/ppbp-codeapps",
       "homepage": "https://github.com/tchinnin/powerplatform-bestpractices-skills"
     },
     {
       "name": "ppbp-dataverse-metadata",
-      "description": "Dataverse schema design best practices: table naming, column conventions, global Choices, and solution integration.",
+      "description": "Dataverse schema design best practices: table, column and global Choice conventions, model review, and dev-only, confirm-first change principles — whatever tool applies the changes.",
       "source": "./plugins/ppbp-dataverse-metadata",
       "homepage": "https://github.com/tchinnin/powerplatform-bestpractices-skills"
     },
     {
       "name": "ppbp-dataverse-plugins",
-      "description": "Dataverse plug-in best practices: project setup, step plugins, Custom APIs, build and deployment workflow.",
+      "description": "Dataverse plug-in best practices: project scaffolding and build, step and Custom API design, and dev-only, confirm-first registration principles — whatever tool registers them.",
       "source": "./plugins/ppbp-dataverse-plugins",
       "homepage": "https://github.com/tchinnin/powerplatform-bestpractices-skills"
     },
     {
       "name": "ppbp-generativepages",
-      "description": "Power Apps Generative Pages best practices: project setup, SDK usage, Fluent UI v9, data access, and deployment.",
+      "description": "Power Apps Generative Pages best practices: repository organisation, page naming and splitting, and Fluent v9 branding with the shared uxui/ design system.",
       "source": "./plugins/ppbp-generativepages",
       "homepage": "https://github.com/tchinnin/powerplatform-bestpractices-skills"
     },

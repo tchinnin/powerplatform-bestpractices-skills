@@ -13,7 +13,7 @@ model: sonnet
 allowed-tools: Read, Bash, Grep, Glob, WebSearch
 metadata:
   author: powerplatform-bestpractices
-  version: "1.2.0"
+  version: "1.2.1"
 ---
 
 ## Official skill
@@ -69,6 +69,6 @@ This skill covers Dataverse column naming and type selection. It does not cover:
 - Domain orientation, repository layout, and core naming rule → `ppbp-dv-metadata-overview`
 - Table naming, ownership, and primary name column → `ppbp-dv-tables`
 - Global Choices naming, schema, and solution integration → `ppbp-dv-global-choices`
-- Writing the model and applying it (plan → apply) → `ppbp-dv-metadata-as-code`
+- Creating or changing columns (procedure) → `dataverse:dv-metadata`
 - Reviewing a model against these rules → `ppbp-dv-metadata-review`
 - Plugin or Custom API development → `ppbp-dv-plugins-overview`

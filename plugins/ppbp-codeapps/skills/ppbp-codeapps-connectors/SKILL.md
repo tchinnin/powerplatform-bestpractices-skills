@@ -12,7 +12,7 @@ model: sonnet
 allowed-tools: Read, Bash, Grep, Glob, WebSearch
 metadata:
   author: powerplatform-bestpractices
-  version: "1.1.0"
+  version: "1.2.0"
 ---
 
 ## Official skill
@@ -33,14 +33,13 @@ guidance the official skills do not make explicit.
    overwritten on the next regeneration and immediately diverge from the live
    schema. If a generated file is wrong, stale, or missing a column, **regenerate
    it via the official `add-*` data-source commands** — never patch it manually.
-2. **Tree-shake Fluent UI v9 imports.** Import individual components, never the
-   full barrel — `import { Button } from "@fluentui/react-components"`. This is the
-   single biggest lever on Code App bundle size.
-3. **Keep data calls out of render.** Call the generated services from `useEffect`
-   (or a data layer such as React Query / SWR), never inline in JSX — inline calls
-   re-fire on every render and cause request waterfalls.
-4. **Memoise derived data** so list / detail components don't recompute on
-   unrelated re-renders.
+2. **If the app uses Fluent UI v9, tree-shake its imports.** Import individual
+   components, never the full barrel — `import { Button } from "@fluentui/react-components"`.
+   It is the single biggest lever on bundle size for Fluent-based apps.
+3. **Keep data calls out of render and out of components.** Generated services are
+   called only from a thin `src/services/` wrapper, consumed through TanStack Query
+   hooks — never inline in JSX nor from `useEffect`. The full pattern is owned by
+   `ppbp-codeapps-react`.
 
 ## Anti-patterns (DO NOT DO)
 
@@ -48,16 +47,17 @@ guidance the official skills do not make explicit.
 |---|---|
 | Hand-editing a file under `src/generated/` — overwritten on the next regeneration and diverges from the live schema. | Regenerate via the official `add-*` data-source commands; never patch generated files manually. |
 | Importing the full Fluent UI barrel — adds hundreds of KB to the bundle. | Import individual components from `@fluentui/react-components`. |
-| Calling a generated service directly in render — request waterfalls on every render cycle. | Fetch in `useEffect` / React Query; memoise the result. |
+| Calling a generated service directly in render or from `useEffect` — waterfalls, no cache. | `src/services/` wrapper + TanStack Query hook (see `ppbp-codeapps-react`). |
 
 ## Skill boundaries
 
 This skill covers the generated data-access code, bundle-size optimisation, and
 data-fetching hygiene. It does not cover:
 
+- Domain orientation and repository layout → `ppbp-codeapps-overview`
 - How to add a connector or generate its service / types → official `add-*` skills (`add-dataverse`, `add-connector`, …)
 - Code App repo / dependency / config conventions → `ppbp-codeapps-setup`
+- React code organisation, state and the TanStack Query data layer → `ppbp-codeapps-react`
 - Custom / company UX/UI guidelines, design tokens / theming, design assets, HTML previews → `ppbp-codeapps-uxui`
-- Domain orientation and repository layout → `ppbp-codeapps-overview`
 - Generative Pages inside model-driven apps → `ppbp-genpages-overview`, `model-apps:genpage`
 - Dataverse schema design → `ppbp-dv-tables`, `ppbp-dv-columns`

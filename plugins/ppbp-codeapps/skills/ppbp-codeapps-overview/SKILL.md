@@ -2,16 +2,17 @@
 name: ppbp-codeapps-overview
 description: >
   Power Apps Code Apps domain overview. Use when starting any Code App task —
-  scaffolding, connector work, or deployment. Provides the canonical repository
+  scaffolding, React code, connector work, or deployment. Provides the canonical repository
   layout for Code Apps and the team conventions shared across all Code App skills
-  in this plugin. Load before ppbp-codeapps-setup or ppbp-codeapps-connectors.
+  in this plugin. Load before ppbp-codeapps-setup, ppbp-codeapps-react or
+  ppbp-codeapps-connectors.
 license: MIT
 user-invocable: true
 model: sonnet
 allowed-tools: Read, Bash, Grep, Glob, WebSearch
 metadata:
   author: powerplatform-bestpractices
-  version: "1.2.0"
+  version: "1.3.0"
 ---
 
 ## Official skill
@@ -33,23 +34,27 @@ folder, kept separate from the app code:
 ├── codeapps/
 │   └── <app-name>/          # one self-contained Code App (its own package.json)
 │       └── …                # standard pac/Vite project — owned by the official skill
-└── uxui/                    # design system & previews (see ppbp-codeapps-uxui)
-    ├── guidelines.md        # colours, typography, spacing, layout rules
+└── uxui/                    # design system & previews — shared with Generative Pages
+    ├── guidelines.md        # colours, typography, spacing, layout rules (skeleton owned by ppbp-codeapps-uxui)
     ├── assets/              # logo, icons, fonts shared across apps
-    └── <app-name>/          # HTML design previews for one app — name mirrors codeapps/<app-name>
-        └── <app-name>-screen.html
+    └── codeapps/
+        └── <app-name>/      # HTML design previews for one app — path mirrors codeapps/<app-name>
+            └── <app-name>-<screen>.html
 ```
 
 - One subfolder per app under `codeapps/`, each with its own `package.json`, built
   and deployed independently. Never mix multiple apps in one flat folder.
-- Each app's design previews live under `uxui/<app-name>/` with the **same folder
-  name** as its `codeapps/<app-name>` project, so design and code stay paired.
+- Each app's design previews live under `uxui/codeapps/<app-name>/`, mirroring its
+  `codeapps/<app-name>` path, so design and code stay paired.
+- `uxui/` is shared with Generative Pages (`uxui/genpages/`, see
+  `ppbp-genpages-overview`); one `guidelines.md` drives both.
 
 ## Domain scope
 
 | Skill | Covers (additive only) |
 |---|---|
-| `ppbp-codeapps-setup` | Repo / dependency / config conventions on top of the official scaffold flow |
+| `ppbp-codeapps-setup` | Scaffold template choice (`starter`, minus Zustand), repo / dependency / config conventions on top of the official flow |
+| `ppbp-codeapps-react` | React conventions inside an app: `src/` organisation, routing, components, state, TanStack Query over generated services, forms, tests |
 | `ppbp-codeapps-connectors` | Generated data-access code, bundle-size optimisation, and data-fetching hygiene |
 | `ppbp-codeapps-uxui` | Applying custom / company UX/UI guidelines via design tokens / theming, design assets, HTML previews |
 
@@ -75,7 +80,8 @@ folder, kept separate from the app code:
 
 This skill covers Code App domain orientation and repository layout. It does not cover:
 
-- Repo / dependency / config conventions for a single app → `ppbp-codeapps-setup`
+- Scaffold template choice, repo / dependency / config conventions for a single app → `ppbp-codeapps-setup`
+- React code inside an app (`src/` organisation, routing, state, TanStack Query, tests) → `ppbp-codeapps-react`
 - Generated data-access code, bundle optimisation, data-fetching hygiene → `ppbp-codeapps-connectors`
 - Custom / company UX/UI guidelines, theming, design assets, HTML previews → `ppbp-codeapps-uxui`
 - The scaffold / init / auth / deploy procedure itself → `code-apps-preview:create-code-app`

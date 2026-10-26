@@ -3,7 +3,7 @@ name: ppbp-dv-metadata-review
 description: >
   Read-only quality review of a Dataverse data model against the ppbp schema conventions,
   with a report ranked by severity (error / best practice / suggestion). Accepts any
-  input: .dv.metadata.yaml files, dataverse/model docs, an exported solution's
+  input: dataverse/model docs, schema-as-code files of any tool, an exported solution's
   customizations.xml, a metadata dump, or pasted content. Use when the user wants to
   review, audit or challenge a Dataverse model — table design, column types, global
   Choices, lookups and cascade behaviour, ownership, auditing — before applying it or
@@ -14,7 +14,7 @@ model: sonnet
 allowed-tools: Read, Bash, Grep, Glob, WebSearch
 metadata:
   author: powerplatform-bestpractices
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 ## Official skill
@@ -23,7 +23,7 @@ metadata:
 
 ## What this skill adds
 
-The `validate` command and the hook (`ppbp-dv-metadata-as-code`) catch mechanical errors. This skill covers the **judgement** a machine can't make: whether the column type fits the business meaning, whether a Choice is really closed, whether a lookup should cascade, whether the ownership and security model make sense, and whether the model is documented.
+Tooling and the platform catch mechanical errors. This skill covers the **judgement** a machine can't make: whether the column type fits the business meaning, whether a Choice is really closed, whether a lookup should cascade, whether the ownership and security model make sense, and whether the model is documented.
 
 **Rule source:** the sibling skills are the only corpus. Read them before reviewing, and do not invent rules:
 
@@ -38,23 +38,23 @@ If you find a real problem that no rule covers, report it as 💡 and suggest ad
 
 ## Procedure
 
-1. **Normalise the input.** Whatever format you're given, build one view: tables (ownership, primary column), columns (type, constraints, description), global Choices (options), lookups (target, cascade) and keys. If the scope isn't given, look for `dataverse/metadata/**/*.dv.metadata.yaml` with Glob. Don't query an environment and don't export solutions; that's not this skill's job. If there's nothing to review, ask for the model.
+1. **Normalise the input.** Whatever format you're given, build one view: tables (ownership, primary column), columns (type, constraints, description), global Choices (options), lookups (target, cascade) and keys. If the scope isn't given, look under `dataverse/` with Glob (review docs and any schema-as-code files). Don't query an environment and don't export solutions; that's not this skill's job. If there's nothing to review, ask for the model.
 2. **Announce the scope:** *"Reviewing N tables, M global Choices from <source>."*
 3. **Apply every rule** from the sources above. Rules tied to a file format (for example "`key` equals the file name") apply only when that format is the input.
 4. **Report**, sorted by severity, with one concrete fix per finding:
 
 ```
-Dataverse model review — dataverse/metadata — 4 tables, 3 Choices
+Dataverse model review — dataverse/ — 4 tables, 3 Choices
 
 ❌ Errors (fix before apply)
-  • prfx_crm_Order.prfx_Status — type text for a closed list of values
+  • prfx_crm_Order.prfx_Status — text column for a closed list of values
     Rule (ppbp-dv-columns): closed lists are global Choices.
-    → type: choice + choice: prfx_crm_choice_OrderStatus
+    → Choice column bound to the global Choice prfx_crm_choice_OrderStatus
 
 ⚠️ Best practices
-  • prfx_crm_Order.prfx_CustomerId — on_delete cascade on a non-composition link
-    Rule (ppbp-dv-tables): explicit cascade, default removelink/restrict.
-    → on_delete: restrict
+  • prfx_crm_Order.prfx_CustomerId — parental cascade on a non-composition link
+    Rule (ppbp-dv-tables): explicit cascade, default referential/restrict.
+    → Delete behaviour: Restrict
 
 💡 Suggestions
   • prfx_crm_choice_OrderStatus — options without colors.
@@ -71,14 +71,14 @@ Severity:
 | 💡 Suggestion | Optional improvement. |
 
 5. **Hand off.**
-   - If the model came from `dataverse/metadata/`, fixes go through `ppbp-dv-metadata-as-code` and the `ppbp-dv-metadata-planner` agent.
+   - If the model came from the repo, fixes go through the project's usual schema change path (its schema-as-code tool, or `dataverse:dv-metadata`), with the user's confirmation.
    - If it came from an existing environment or solution, present the report as findings. Point out that some fixes, such as ownership, column type or primary column, can't be applied in place.
 
 ## Anti-patterns (DO NOT DO)
 
 | Anti-pattern | Correct approach |
 |---|---|
-| Editing the model or running `plan`/`apply` during a review | Review is read-only; route fixes to `ppbp-dv-metadata-as-code` |
+| Editing the model or applying changes during a review | Review is read-only; hand fixes off to the project's schema change path |
 | Reporting conventions that are respected | Report real deviations only — no false positives |
 | Raising a 💡 to ❌ to push a preference | Keep the severity the source skill implies |
 | Inventing rules that aren't in the sibling skills | Report as 💡 and propose adding the rule to the right skill |
@@ -87,6 +87,6 @@ Severity:
 ## Skill boundaries
 
 - Domain orientation and repository layout → `ppbp-dv-metadata-overview`
-- Writing or changing the model, plan/apply → `ppbp-dv-metadata-as-code`
+- Applying schema changes (procedure) → `dataverse:dv-metadata`
 - Exporting a solution to review it → `dataverse:dv-solution`
 - Inspecting live metadata → `dataverse:dv-metadata`

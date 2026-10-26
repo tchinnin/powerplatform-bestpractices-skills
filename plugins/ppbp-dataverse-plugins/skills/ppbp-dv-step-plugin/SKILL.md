@@ -5,7 +5,7 @@ description: >
   an IPlugin step (Pre-Validation, Pre-Operation, Post-Operation), configuring pre/post
   images, choosing synchronous vs. asynchronous execution, selecting the correct execution
   pipeline stage, retrieving only required columns, or using the service factory pattern.
-  Also use when the user asks about step registration, image attribute lists, or execution
+  Also use when the user asks about step design, image attribute lists, or execution
   context access.
 license: MIT
 user-invocable: true
@@ -13,7 +13,7 @@ model: sonnet
 allowed-tools: Read, Bash, Grep, Glob, WebSearch
 metadata:
   author: powerplatform-bestpractices
-  version: "1.0.0"
+  version: "1.2.0"
 ---
 
 ## Official skill
@@ -44,20 +44,21 @@ No official Microsoft skill exists for this topic. Dataverse plug-in step implem
 
 ## Step registration checklist
 
-Before registering a step:
-- Choose the correct entity (logical name, lowercase).
-- Choose the correct message (`Create`, `Update`, `Delete`, or custom).
-- Choose the correct stage (`PreValidation`, `PreOperation`, `PostOperation`).
-- Choose sync or async.
-- Define the attribute filter for `Update` steps — omitting it triggers the step on every update, regardless of which columns changed.
-- Define the minimum required image columns — avoid `ColumnSet(true)` in images.
+Before registering a step, whatever the tool, decide:
+
+- **Table:** the correct one (logical name, lowercase).
+- **Message:** the correct one (`Create`, `Update`, `Delete`, or custom).
+- **Stage:** the correct one (`pre-validation`, `pre-operation`, `post-operation`).
+- **Mode:** sync or async.
+- **Attribute filter for `Update` steps:** always set one. Without it, the step fires on every update, whichever columns changed.
+- **Image columns:** the minimum required, always as an explicit column list.
 
 ## Anti-patterns (DO NOT DO)
 
 | Anti-pattern | Correct approach |
 |---|---|
 | Calling the organisation service in `PreValidation` — The transaction has not started; service calls create a nested transaction and can cause deadlocks. | Move data access to `PreOperation` or `PostOperation`. |
-| Missing plug-in registration update after schema changes — If a step uses an explicit image with a fixed column set, new columns are silently excluded. | Update the image's attribute list in the Plugin Registration Tool after every schema change that affects step images. |
+| Missing plug-in registration update after schema changes — If a step uses an explicit image with a fixed column set, new columns are silently excluded. | Update the image's column list in the registration after every schema change that affects step images. |
 | Catching all exceptions silently in async steps — Swallows failures where no UI feedback exists. | Log to `ITracingService` and re-throw, or throw `InvalidPluginExecutionException`. |
 | Registering `Update` steps without an attribute filter — Fires on every update to the entity, even unrelated columns. | Define an explicit attribute filter listing only the columns that should trigger the step. |
 | Post-Image on synchronous steps — The platform fetches Post-Image data synchronously, adding a read to every execution. | Use Post-Image only when the post-commit values are genuinely needed; prefer async for Post-Image consumers. |
@@ -67,6 +68,7 @@ Before registering a step:
 This skill covers step plugin implementation. It does not cover:
 
 - Domain orientation and repository layout → `ppbp-dv-plugins-overview`
-- Project scaffolding, build, deployment → `ppbp-dv-plugin-build`
+- Step and image registration procedure → `dataverse:dv-overview`
+- Project scaffolding, build → `ppbp-dv-plugin-build`
 - Custom API design and implementation → `ppbp-dv-custom-api`
 - Dataverse schema design → `ppbp-dv-tables`, `ppbp-dv-columns`

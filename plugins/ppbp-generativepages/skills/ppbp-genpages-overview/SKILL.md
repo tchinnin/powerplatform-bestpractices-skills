@@ -13,7 +13,7 @@ model: sonnet
 allowed-tools: Read, Bash, Grep, Glob, WebSearch
 metadata:
   author: powerplatform-bestpractices
-  version: "1.2.0"
+  version: "1.3.0"
 ---
 
 ## Official skill
@@ -40,16 +40,17 @@ Apps use), with page previews under a `genpages/` subfolder:
 │   └── <model-app-name>/      # group pages by the model-driven app that hosts them
 │       └── <page-name>/       # one page, one folder
 └── uxui/                      # shared design system & previews (see ppbp-genpages-uxui)
-    ├── guidelines.md          # shared spec — colours, typography, spacing
+    ├── guidelines.md          # shared spec — colours, typography, spacing (skeleton owned by ppbp-codeapps-uxui)
     ├── assets/                # shared logo, icons, fonts
-    └── genpages/              # generative-page previews
-        └── <page-name>/       # one folder per page — mirrors genpages/<…>/<page-name>
-            └── <page-name>.html
+    └── genpages/
+        └── <model-app-name>/
+            └── <page-name>/   # HTML previews — path mirrors genpages/<model-app-name>/<page-name>
+                └── <page-name>.html
 ```
 
 - Group page sources by model-driven app — never drop page folders loose under `genpages/`.
-- One page, one folder — and one matching preview folder under `uxui/genpages/`.
-- `uxui/` is shared with Code Apps; one design system drives both.
+- One page, one folder — and one matching preview folder at `uxui/genpages/<model-app-name>/<page-name>/`.
+- `uxui/` is shared with Code Apps (`uxui/codeapps/`, see `ppbp-codeapps-overview`); one design system drives both.
 
 ## Domain scope
 
@@ -60,7 +61,7 @@ Apps use), with page previews under a `genpages/` subfolder:
 Everything procedural — building, running, and deploying a page — is owned by
 `model-apps:genpage`; load it directly.
 
-## Team conventions (additive only)
+## Global Generative Page principles
 
 1. **Naming** — name each page folder for the app and the job it does (e.g.
    `<app>-<entity>-summary`), so the repo reflects where the page is surfaced.
@@ -79,7 +80,7 @@ Everything procedural — building, running, and deploying a page — is owned b
 
 | Anti-pattern | Correct approach |
 |---|---|
-| Page folders loose under `genpages/` — loses the model-app grouping. | Always `genpages/<model-app-name>/<page-name>/`. |
+| Page folders loose under `genpages/` — loses the model-app grouping. | Always `genpages/<model-app-name>/<page-name>/`, and the same path under `uxui/genpages/` for previews. |
 | Restating genpage's runtime APIs, dependency versions, or deploy commands here — drifts when the official skill changes. | State them nowhere here; point to `model-apps:genpage`. |
 
 ## Skill boundaries

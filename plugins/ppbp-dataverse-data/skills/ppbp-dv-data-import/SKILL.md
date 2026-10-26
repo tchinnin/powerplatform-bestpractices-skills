@@ -12,7 +12,7 @@ model: sonnet
 allowed-tools: Read, Bash, Grep, Glob, WebSearch
 metadata:
   author: powerplatform-bestpractices
-  version: "1.1.0"
+  version: "1.2.1"
 ---
 
 ## Official skill
@@ -83,8 +83,9 @@ When the source is a CSV file:
 | `dev/` | Dev / test seed data | **No** |
 | `temp/` | One-off operations | Context-dependent — confirm before running |
 
-A script under `dev/` must guard against a production environment URL and abort if
-it detects one.
+A script under `dev/` must refuse to run unless the target descriptor declares
+`ENVIRONMENT_STAGE=dev` (or `uat` when seeding UAT is explicitly intended) — read the
+stage from the root `.env.<stage>` file, never compare against a hard-coded prod URL.
 
 ## Anti-patterns (DO NOT DO)
 
@@ -102,9 +103,9 @@ it detects one.
 This skill covers import discipline, ordering, lookup-resolution strategy, CSV
 conventions, and environment segmentation. It does not cover:
 
-- SDK calls, bulk/upsert mechanics, batch sizing, lookup binding → `dataverse:dv-data`
 - Domain orientation and repository layout → `ppbp-dv-data-overview`
+- SDK calls, bulk/upsert mechanics, batch sizing, lookup binding → `dataverse:dv-data`
 - Script naming, lifecycle, and idempotency → `ppbp-dv-data-scripts`
-- Dataverse table and column schema → `ppbp-dv-tables`, `ppbp-dv-columns`
+- Dataverse schema design and naming → `ppbp-dv-metadata-overview`
 - Plugin-based data validation on record creation → `ppbp-dv-step-plugin`
 - Solution lifecycle and deployment → `ppbp-alm-solutions`
