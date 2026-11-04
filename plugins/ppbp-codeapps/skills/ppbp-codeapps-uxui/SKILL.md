@@ -13,7 +13,7 @@ model: sonnet
 allowed-tools: Read, Bash, Grep, Glob, WebSearch
 metadata:
   author: powerplatform-bestpractices
-  version: "1.3.0"
+  version: "1.3.1"
 ---
 
 ## Official skill
@@ -147,8 +147,8 @@ This skill covers applying custom/company UX/UI guidelines, design tokens/themin
 design assets, and HTML previews for Code Apps. It does not cover:
 
 - Domain orientation and repository layout → `ppbp-codeapps-overview`
-- Repo / dependency / config conventions → `ppbp-codeapps-setup`
-- React code-level accessibility, forms and component structure → `ppbp-codeapps-react`
-- Generated data-access code, bundle optimisation, data-fetching hygiene → `ppbp-codeapps-connectors`
+- Template, dependencies, tooling, bundle optimisation → `ppbp-codeapps-setup`
+- Component reuse, forms and accessibility in code → `ppbp-codeapps-components`
+- Data access and data-fetching → `ppbp-codeapps-data`
 - The scaffold / init / auth / deploy procedure and the stack itself → `code-apps-preview:create-code-app`
 - Generative Pages inside model-driven apps → `ppbp-genpages-overview`, `model-apps:genpage`

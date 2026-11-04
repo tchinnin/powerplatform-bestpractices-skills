@@ -11,7 +11,7 @@ model: sonnet
 allowed-tools: Read, Bash, Grep, Glob, WebSearch
 metadata:
   author: powerplatform-bestpractices
-  version: "2.6.0"
+  version: "2.6.1"
 ---
 
 ## Official skill
@@ -47,6 +47,9 @@ This skill is declared in the project's agent instruction file (`AGENTS.md` at t
 ├── codeapps/
 │   └── <app-name>/      # One subfolder per Code App (independent Vite project)
 │
+├── docs/
+│   └── <app-name>/      # App documentation — Code Apps: mandatory dataverse-calls.md (call map)
+│
 ├── plugins/
 │   └── <plugin-name>/   # One subfolder per Dataverse Plugin project
 │
@@ -75,7 +78,8 @@ If the project defines its schema or plug-in registrations as code, the tool's f
 | `dataverse/` | `dataverse:dv-metadata`, `ppbp-dv-metadata-overview`, `ppbp-dv-tables`, `ppbp-dv-columns`, `ppbp-dv-global-choices`, `ppbp-dv-metadata-review` |
 | `.env.dev`, `.env.uat`, `.env.prod` | `ppbp-init` |
 | `data/import/` | `dataverse:dv-data`, `ppbp-dv-data-overview`, `ppbp-dv-data-scripts`, `ppbp-dv-data-import` |
-| `codeapps/<app>/` | `code-apps-preview:create-code-app`, `ppbp-codeapps-overview`, `ppbp-codeapps-setup`, `ppbp-codeapps-react`, `ppbp-codeapps-connectors`, `ppbp-codeapps-uxui` |
+| `codeapps/<app>/` | `code-apps-preview:create-code-app`, `ppbp-codeapps-overview`, `ppbp-codeapps-setup`, `ppbp-codeapps-architecture`, `ppbp-codeapps-components`, `ppbp-codeapps-data`, `ppbp-codeapps-errors`, `ppbp-codeapps-react`, `ppbp-codeapps-review`, `ppbp-codeapps-uxui` |
+| `docs/<app>/` | `ppbp-codeapps-overview`, `ppbp-codeapps-data` (owns `dataverse-calls.md`) |
 | `plugins/<plugin>/` | `dataverse:dv-overview`, `ppbp-dv-plugins-overview`, `ppbp-dv-step-plugin`, `ppbp-dv-custom-api`, `ppbp-dv-plugin-build` |
 | `genpages/<app>/<page>/` | `model-apps:genpage`, `ppbp-genpages-overview`, `ppbp-genpages-uxui` |
 | `uxui/` | `ppbp-codeapps-uxui` (owns `guidelines.md` and `uxui/codeapps/`), `ppbp-genpages-uxui` (`uxui/genpages/`) |
@@ -87,7 +91,7 @@ If the project defines its schema or plug-in registrations as code, the tool's f
 
 | Anti-pattern | Correct approach |
 |---|---|
-| Creating `dataverse/`, `data/`, `codeapps/`, `plugins/`, `genpages/`, `uxui/`, `solutions/` or pipeline folders before the first piece of work in that domain | Create folders on demand, when the relevant skill scaffolds the first asset |
+| Creating `dataverse/`, `data/`, `codeapps/`, `docs/`, `plugins/`, `genpages/`, `uxui/`, `solutions/` or pipeline folders before the first piece of work in that domain | Create folders on demand, when the relevant skill scaffolds the first asset |
 | Putting Python scripts directly at repo root | Data scripts go in `data/import/`; schema changes are never made from data scripts |
 | Environment URLs scattered across scripts, pipelines or docs | One descriptor per environment at the root: `.env.dev`, `.env.uat`, `.env.prod` |
 | Multiple Code App source files mixed in a single `codeapps/` folder | One subfolder per app — each is an independent Vite project |
@@ -102,7 +106,7 @@ This skill covers project layout and skill routing only. It does not cover:
 - Creating a new project, agent instruction files → `ppbp-init`
 - README.md content and maintenance → `ppbp-readme`
 - Dataverse schema design and naming → `ppbp-dv-metadata-overview`
-- Code App development → `ppbp-codeapps-overview`, `ppbp-codeapps-setup`, `ppbp-codeapps-react`, `ppbp-codeapps-connectors`, `ppbp-codeapps-uxui`
+- Code App development → `ppbp-codeapps-overview`, `ppbp-codeapps-setup`, `ppbp-codeapps-architecture`, `ppbp-codeapps-components`, `ppbp-codeapps-data`, `ppbp-codeapps-errors`, `ppbp-codeapps-react`, `ppbp-codeapps-review`, `ppbp-codeapps-uxui`
 - Plugin development and registration → `ppbp-dv-plugins-overview`
 - Generative Pages → `ppbp-genpages-overview`, `ppbp-genpages-uxui`
 - Solution lifecycle and pipelines → `ppbp-alm-overview`, `ppbp-alm-solutions`, `ppbp-alm-pipelines`

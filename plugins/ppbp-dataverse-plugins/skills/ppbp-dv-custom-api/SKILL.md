@@ -12,7 +12,7 @@ model: sonnet
 allowed-tools: Read, Bash, Grep, Glob, WebSearch
 metadata:
   author: powerplatform-bestpractices
-  version: "1.2.0"
+  version: "1.2.1"
 ---
 
 ## Official skill
@@ -101,4 +101,5 @@ This skill covers Custom API design and implementation. It does not cover:
 - Project scaffolding, build → `ppbp-dv-plugin-build`
 - Step plugin implementation, execution pipeline, images → `ppbp-dv-step-plugin`
 - Dataverse schema design → `ppbp-dv-tables`, `ppbp-dv-columns`
+- Deciding when a Code App should call a Custom API, and calling it from the app → `ppbp-codeapps-data`
 - Power Automate cloud flows → out of scope for this plugin

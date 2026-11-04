@@ -1,6 +1,6 @@
 {
   "name": "ppbp-dataverse-plugins",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Dataverse plug-in best practices: project scaffolding and build, step and Custom API design, and dev-only, confirm-first registration principles — whatever tool registers them.",
   "author": {
     "name": "Théophile Chin-nin",
