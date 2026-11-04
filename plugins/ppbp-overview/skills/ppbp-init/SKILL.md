@@ -15,7 +15,7 @@ allowed-tools: Read, Write, Edit, Bash, Grep, Glob, WebSearch
 argument-hint: "<project-name>"
 metadata:
   author: powerplatform-bestpractices
-  version: "1.5.0"
+  version: "1.5.1"
 ---
 
 ## Official skill
@@ -58,7 +58,7 @@ Project context: see [README.md](./README.md).
 - `dataverse:dv-solution` + `ppbp-alm-overview` + `ppbp-alm-solutions` + `ppbp-alm-pipelines` — ALM / solution lifecycle
 - `dataverse:dv-metadata` + `ppbp-dv-metadata-overview` + `ppbp-dv-tables` + `ppbp-dv-columns` + `ppbp-dv-global-choices` + `ppbp-dv-metadata-review` — Dataverse schema
 - `dataverse:dv-data` + `ppbp-dv-data-overview` + `ppbp-dv-data-scripts` + `ppbp-dv-data-import` — Dataverse data
-- `code-apps-preview:create-code-app` + `ppbp-codeapps-overview` + `ppbp-codeapps-setup` + `ppbp-codeapps-react` + `ppbp-codeapps-connectors` + `ppbp-codeapps-uxui` — Code Apps
+- `code-apps-preview:create-code-app` + `ppbp-codeapps-overview` + `ppbp-codeapps-setup` + `ppbp-codeapps-architecture` + `ppbp-codeapps-components` + `ppbp-codeapps-data` + `ppbp-codeapps-errors` + `ppbp-codeapps-react` + `ppbp-codeapps-review` + `ppbp-codeapps-uxui` — Code Apps
 - `dataverse:dv-overview` + `ppbp-dv-plugins-overview` + `ppbp-dv-step-plugin` + `ppbp-dv-custom-api` + `ppbp-dv-plugin-build` — Dataverse plug-ins
 - `model-apps:genpage` + `ppbp-genpages-overview` + `ppbp-genpages-uxui` — Generative Pages
 

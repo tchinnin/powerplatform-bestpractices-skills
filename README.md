@@ -12,7 +12,7 @@ Microsoft publishes **official skills** that document the canonical way to use P
 |---|---|
 | `ppbp-overview` | Project orientation: repository layout, skill routing, project initialisation, README maintenance |
 | `ppbp-alm` | Solution design, naming, versioning, segmentation, deployment pipelines |
-| `ppbp-codeapps` | Power Apps Code Apps: repository structure, React conventions, connectors, UX/UI |
+| `ppbp-codeapps` | Power Apps Code Apps: tooling, UI/logic architecture, component reuse and async states, server-side Dataverse data access, error handling, React conventions, app review, UX/UI |
 | `ppbp-dataverse-metadata` | Dataverse schema design: table, column and global Choice conventions, model review, dev-only change principles |
 | `ppbp-dataverse-data` | Dataverse data scripts, initial imports, bulk operations |
 | `ppbp-dataverse-plugins` | Dataverse plug-ins: project scaffolding and build, step and Custom API design, dev-only registration principles |
